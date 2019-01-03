@@ -1,5 +1,24 @@
-$color: peachpuff;
+*{
+  box-sizing: border-box;
+}
 
-h1{
-  color: $color
+body{
+  width: 80%;
+  margin: 10% auto;
+  .game-board{
+    display: flex;
+    justify-content: space-between;
+    .grid{
+      border: 1px solid black;
+      height: 500px;
+      width: 500px;
+      display: flex;
+      flex-wrap: wrap;
+      div{
+        border: 1px solid grey;
+        height: 10%;
+        width: 10%;
+      }
+    }
+  }
 }
