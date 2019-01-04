@@ -6,7 +6,7 @@ $(() => {
   const $fireGrid = $('.fire-grid')
   const width = 10
   const cpuGrid = []
-  let ship = [3,2,1,0]
+  const ship1 = [3,2,1,0]
   let fireIndex = 0
 
 
@@ -20,30 +20,47 @@ $(() => {
   const $fireSquares = $fireGrid.find('div')
   const $shipSquares = $shipGrid.find('div')
   // establish the ships/targeting reticule at start
-  ship.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('ship'))
+  ship1.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('ship'))
   $fireSquares.eq(fireIndex).addClass('firing')
 
   // figure out which way user wants to move ship
   $(document).on('keydown', e =>{
-    let direction
+    const ship = ship1
     switch(e.keyCode){
-      case 37: direction = 'left'
+      case 37: moveShip(ship, 'left')
         break
-      case 38: direction = 'up'
+      case 38: moveShip(ship, 'up')
         break
-      case 39: direction = 'right'
+      case 39: moveShip(ship, 'right')
         break
-      case 40: direction = 'down'
+      case 40: moveShip(ship, 'down')
         break
     }
-    console.log(direction)
-    moveShip(direction)
   })
 
-  // move the ship in the direction user commanded
-  function moveShip(direction){
-    
+  function moveShip(ship, direction){
+    ship.forEach(shipIndex => $shipSquares.eq(shipIndex).removeClass('ship'))
+    const nextIndex = getNextIndex(ship, direction)
+    console.log(nextIndex)
+    nextIndex.forEach(index => {
+      ship.unshift(index)
+      ship.pop()
+    })
+    ship.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('ship'))
+
   }
+
+  function getNextIndex(ship, direction){
+    switch(direction) {
+      case 'right': return ship.map(index => index + 1)
+      case 'left': return ship.map(index => index -1)
+      case 'down': return ship.map(index => index += width)
+      case 'up': return ship.map(index => index -= width)
+    }
+  }
+
+
+
 
 
 
@@ -70,6 +87,8 @@ $(() => {
       $fireSquares.eq(fireIndex).addClass('firing')
     })
   }
+
+
 
 
 
