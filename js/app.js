@@ -21,7 +21,28 @@ $(() => {
   ship.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('ship'))
   $fireSquares.eq(fireIndex).addClass('firing')
 
-  console.log(ship)
+
+
+
+
+  $(document).on('keydown', e => {
+    // left 37, up 38, right 39, down 40
+    $fireSquares.eq(fireIndex).removeClass('firing')
+
+    switch(e.keyCode) {
+      case 37: if(fireIndex % width > 0)fireIndex--
+        break
+      case 38: if(fireIndex - width >= 0) fireIndex -= width
+        break
+      case 39: if(fireIndex % width < width-1)fireIndex++
+        break
+      case 40: if(fireIndex + width < width*width) fireIndex += width
+        break
+    }
+    $fireSquares.eq(fireIndex).addClass('firing')
+
+
+  })
 
 
 
