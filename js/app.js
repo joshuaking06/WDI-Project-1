@@ -22,21 +22,42 @@ $(() => {
     // cpuGrid.push(i)
   }
 
-
+  console.log(makeShip(4))
 
   // define the squares in each grid
   const $fireSquares = $fireGrid.find('div')
   const $shipSquares = $shipGrid.find('div')
 
+
+
   // generate random cpu ship
   function makeShip(size){
-    const randomRange = (Math.floor(Math.random() * (11-size)) + 0)
-    const randomIndex = (randomRange *10) + (Math.floor(Math.random() * (11-size)) + 0)
-    const newShip = []
-    for(let i =0; i< size; i++){
-      newShip.push(randomIndex + i)
+    return Math.random() < 0.5 ? randomVertical(size) : randomHorizontal(size)
+
+  }
+
+  // make random vertical
+  function randomVertical(size){
+    const randomRangeV = (Math.floor(Math.random() * (10-size)) + 0)
+    const randomIndexV = (randomRangeV *10) + (Math.floor(Math.random() * 9) + 0)
+    const vertical = []
+    let m = 10
+    for(let i =0; i<size; i++){
+      vertical.push(randomIndexV + m)
+      m+= 10
     }
-    return newShip
+    return vertical
+  }
+
+  // make random horizontal
+  function randomHorizontal(size){
+    const randomRangeH = (Math.floor(Math.random() * 10) + 0)
+    const randomIndexH = (randomRangeH *10) + (Math.floor(Math.random() * (11-size)) + 0)
+    const horizontal = []
+    for(let i =0; i< size; i++){
+      horizontal.push(randomIndexH + i)
+    }
+    return horizontal
   }
 
   // place the cpu ships on "board"
