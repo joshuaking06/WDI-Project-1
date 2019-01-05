@@ -12,6 +12,8 @@ $(() => {
     submarine: [2,1,0],
     patrolBoat: [1,0]
   }
+
+  let cpuBattleship = []
   let fireIndex = 0
 
 
@@ -22,7 +24,6 @@ $(() => {
     // cpuGrid.push(i)
   }
 
-  console.log(makeShip(4))
 
   // define the squares in each grid
   const $fireSquares = $fireGrid.find('div')
@@ -62,7 +63,8 @@ $(() => {
 
   // place the cpu ships on "board"
   function placeCpuShips(){
-    const cpuBattleship = makeShip(4)
+    cpuBattleship = makeShip(4)
+    cpuBattleship.forEach(shipIndex => $fireSquares.eq(shipIndex).addClass('ship'))
     return cpuBattleship
   }
 
@@ -116,7 +118,20 @@ $(() => {
 
 
 
-
+  function fire(){
+    if($fireSquares.eq(fireIndex).hasClass('hit')){
+      // $(document).off()
+      alert('you already hit here,try again')
+    } else if(!$fireSquares.eq(fireIndex).hasClass('ship')){
+      alert('you missed')
+      // cpuTurn()
+    } else{
+      // $(document).off()
+      alert('you hit')
+      $fireSquares.eq(fireIndex).addClass('hit')
+      // cpuTurn()
+    }
+  }
 
 
 
@@ -141,6 +156,7 @@ $(() => {
           break
         case 40: if(fireIndex + width < width*width) fireIndex += width
           break
+        case 13: fire()
       }
       $fireSquares.eq(fireIndex).addClass('firing')
     })
@@ -151,7 +167,7 @@ $(() => {
   // starting the game
   function play(){
     placeCpuShips()
-    placeUserShips(5)
+    placeUserShips(1)
   }
 
   play()
