@@ -28,18 +28,24 @@ $(() => {
   const $fireSquares = $fireGrid.find('div')
   const $shipSquares = $shipGrid.find('div')
 
+  // generate random cpu ship
   function makeShip(size){
-    const randomRange = (Math.floor(Math.random() * 9) + 0)
-    const randomI = (randomRange *10)
-    return Array.from()
+    const randomRange = (Math.floor(Math.random() * (11-size)) + 0)
+    const randomIndex = (randomRange *10) + (Math.floor(Math.random() * (11-size)) + 0)
+    const newShip = []
+    for(let i =0; i< size; i++){
+      newShip.push(randomIndex + i)
+    }
+    return newShip
   }
 
   // place the cpu ships on "board"
   function placeCpuShips(){
-    let cpuShips = []
     const cpuBattleship = makeShip(4)
+    return cpuBattleship
   }
 
+  // allow user to place where ships are
   function placeUserShips(i){
     $(document).off()
     // choosing ship to begin placing
@@ -123,7 +129,7 @@ $(() => {
 
   // starting the game
   function play(){
-    // placeCpuShips()
+    placeCpuShips()
     placeUserShips(5)
   }
 
