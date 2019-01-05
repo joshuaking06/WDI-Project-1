@@ -13,8 +13,10 @@ $(() => {
     patrolBoat: [1,0]
   }
 
-  let cpuBattleship = []
+  const cpuShips = {}
   let fireIndex = 0
+  const cpuSquaresHit = []
+  const userSquaresHit = []
 
 
   // make grid for user fire, user ships, and cpu grid(array)
@@ -31,6 +33,13 @@ $(() => {
 
 
 
+
+
+
+
+
+  //                                                    SHIP PLACEMENT
+  // --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   // generate random cpu ship
   function makeShip(size){
     return Math.random() < 0.5 ? randomVertical(size) : randomHorizontal(size)
@@ -63,9 +72,16 @@ $(() => {
 
   // place the cpu ships on "board"
   function placeCpuShips(){
-    cpuBattleship = makeShip(4)
-    cpuBattleship.forEach(shipIndex => $fireSquares.eq(shipIndex).addClass('ship'))
-    return cpuBattleship
+    cpuShips.cpuBattleship = makeShip(4)
+    cpuShips.cpuPatrolBoat = makeShip(2)
+    cpuShips.cpuSubmarine = makeShip(3)
+    cpuShips.cpuCarrier = makeShip(5)
+    cpuShips.cpuDestroyer = makeShip(3)
+    for(const ship in cpuShips){
+      cpuShips[ship].forEach(shipIndex => $fireSquares.eq(shipIndex).addClass('ship'))
+    }
+    console.log(cpuShips)
+    return cpuShips
   }
 
   // allow user to place where ships are
@@ -88,7 +104,7 @@ $(() => {
         case 13: if(i-1 > 0){
           i--
           placeUserShips(i)
-        } else aim()
+        } else userTurn()
       }
     })
   }
@@ -103,6 +119,9 @@ $(() => {
       ship.pop()
       ship.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('ship'))
     })
+    for(const ship in ships){
+      ships[ship].forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('ship'))
+    }
     return ship
   }
 
@@ -118,22 +137,30 @@ $(() => {
 
 
 
+
+
+
+  //                                                COMBAT
+  // ---------------------------------------------------------------------------------------------------------
+  // after the user press enter to shoot, check if they hit,miss,already hit
   function fire(){
-    if($fireSquares.eq(fireIndex).hasClass('hit')){
-      // $(document).off()
+    if($fireSquares.eq(fireIndex).hasClass('hit') ||
+      $fireSquares.eq(fireIndex).hasClass('attacked')){
       alert('you already hit here,try again')
     } else if(!$fireSquares.eq(fireIndex).hasClass('ship')){
+      $(document).off()
       alert('you missed')
-      // cpuTurn()
+      $fireSquares.eq(fireIndex).addClass('attacked')
+      cpuTurn()
     } else{
-      // $(document).off()
+      $(document).off()
       alert('you hit')
       $fireSquares.eq(fireIndex).addClass('hit')
-      // cpuTurn()
+      cpuSquaresHit.push(fireIndex)
+      console.log(cpuSquaresHit)
+      cpuTurn()
     }
   }
-
-
 
 
 
@@ -145,7 +172,6 @@ $(() => {
     $fireSquares.eq(fireIndex).addClass('firing')
     $(document).off()
     $(document).on('keydown', e => {
-      // left 37, up 38, right 39, down 40
       $fireSquares.eq(fireIndex).removeClass('firing')
       switch(e.keyCode) {
         case 37: if(fireIndex % width > 0)fireIndex--
@@ -164,10 +190,48 @@ $(() => {
 
 
 
+  // function for cpu attack
+  function cpuFire(hitBefore){
+    const cpuTarget = hitBefore +1 || (Math.floor(Math.random() * 99) + 0)
+    if($shipSquares.eq(cpuTarget).hasClass('hit') ||
+      $shipSquares.eq(cpuTarget).hasClass('attacked')){
+      return cpuFire()
+    } else if(!$shipSquares.eq(cpuTarget).hasClass('ship')){
+      $shipSquares.eq(cpuTarget).addClass('attacked')
+      userTurn()
+    } else{
+      $shipSquares.eq(cpuTarget).addClass('hit')
+      userSquaresHit.push(cpuTarget)
+      console.log(userSquaresHit)
+      userTurn()
+    }
+  }
+
+
+
+
+
+
+
+  //                                      TURN MANAGEMENT
+  //----------------------------------------------------------------------------------------------------------
+  // user's turn, update for previous opponent turn and user aims to attack
+  function userTurn(){
+    // updateCpuScore()
+    aim()
+  }
+
+  // cpu turn, update score of user after his/her turn and cpu attacks
+  function cpuTurn(){
+    // updateUserScore()
+    cpuFire()
+  }
+
+
   // starting the game
   function play(){
     placeCpuShips()
-    placeUserShips(1)
+    placeUserShips(5)
   }
 
   play()
