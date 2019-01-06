@@ -138,6 +138,7 @@ $(() => {
 
   // rotate horizontally
   function rotateShipHorizontal(ship){
+    console.log(ship)
     const startingIndex = ship[0]
     const horzShip = []
     for(let i =0; i< ship.length; i++){
@@ -149,7 +150,8 @@ $(() => {
       ship.pop()
       ship.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('ship'))
     })
-    return ship
+    console.log(ship.sort((a,b) => b-a))
+    return ship.sort((a,b) => b-a)
   }
 
 
@@ -171,7 +173,8 @@ $(() => {
       ship.pop()
       ship.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('ship'))
     })
-    return ship
+    console.log(ship.sort((a,b) => b-a))
+    return ship.sort((a,b) => b-a)
   }
 
   // move the ship
