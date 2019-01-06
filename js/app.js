@@ -107,17 +107,20 @@ $(() => {
       console.log(isVertical(ship))
       switch(e.keyCode){
         case 37: if(ship[ship.length-1] % width > ship.length-1 ||
-                  isVertical(ship)){
+                  (isVertical(ship) && (ship[0] % width > 0))){
           moveShip(ship, 'left')
         }
           break
         case 38: if(ship[0] - width >= 0) moveShip(ship, 'up')
           break
-        case 39: if(ship[0] % width < width-[ship.length]) moveShip(ship, 'right')
+        case 39: if(ship[0] % width < width-[ship.length] ||
+                (isVertical(ship) && (ship[0] % width < width-1))){
+          moveShip(ship, 'right')
+        }
           break
         case 40: if(ship[0]+ width < width*width) moveShip(ship, 'down')
           break
-        case 16: rotateShipVertical(ship)
+        case 16: if(!isVertical(ship))rotateShipVertical(ship)
           break
         case 13: if(i-1 > 0){
           i--
@@ -129,18 +132,12 @@ $(() => {
 
   // check if ship is vertical
   function isVertical(ship){
-    return ship.every(index => index % 10 === 0)
+    return ship[1] - ship[0] === 10
   }
 
 
 
-  // check if ship needs to be rotated vertically or horizontally
-  // function rotateShip(ship){
-  //   ship.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('ship'))
-  //   ship = rotateShipVertical(ship)
-  //   ship.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('ship'))
-  //   return ship
-  // }
+
 
   // rotate the ship vertically
   function rotateShipVertical(ship){
