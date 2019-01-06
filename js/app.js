@@ -104,7 +104,6 @@ $(() => {
     ship.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('ship'))
     // figure out which way user wants to move ship, and if it's possible
     $(document).on('keydown', e =>{
-      console.log(isVertical(ship))
       switch(e.keyCode){
         case 37: if(ship[ship.length-1] % width > ship.length-1 ||
                   (isVertical(ship) && (ship[0] % width > 0))){
@@ -121,6 +120,7 @@ $(() => {
         case 40: if(ship[0]+ width < width*width) moveShip(ship, 'down')
           break
         case 16: if(!isVertical(ship))rotateShipVertical(ship)
+          if(isVertical(ship))rotateShipHorizontal(ship)
           break
         case 13: if(i-1 > 0){
           i--
@@ -135,6 +135,22 @@ $(() => {
     return ship[1] - ship[0] === 10
   }
 
+
+  // rotate horizontally
+  function rotateShipHorizontal(ship){
+    const startingIndex = ship[0]
+    const horzShip = []
+    for(let i =0; i< ship.length; i++){
+      horzShip.push(startingIndex + i)
+    }
+    horzShip.forEach(index => {
+      ship.forEach(shipIndex => $shipSquares.eq(shipIndex).removeClass('ship'))
+      ship.unshift(index)
+      ship.pop()
+      ship.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('ship'))
+    })
+    return ship
+  }
 
 
 
@@ -155,9 +171,6 @@ $(() => {
       ship.pop()
       ship.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('ship'))
     })
-    for(const ship in ships){
-      ships[ship].forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('ship'))
-    }
     return ship
   }
 
