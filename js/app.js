@@ -13,7 +13,13 @@ $(() => {
     patrolBoat: [1,0]
   }
 
-  const cpuShips = {}
+  const cpuShips = {
+    cpuBattleship: [],
+    cpuPatrolBoat: [],
+    cpuSubmarine: [],
+    cpuCarrier: [],
+    cpuDestroyer: []
+  }
   let fireIndex = 0
   const cpuSquaresHit = []
   const userSquaresHit = []
@@ -42,7 +48,9 @@ $(() => {
   // --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   // generate random cpu ship
   function makeShip(size){
-    return Math.random() < 0.5 ? randomVertical(size) : randomHorizontal(size)
+    const newRandomShip = Math.random() < 0.5 ? randomVertical(size) : randomHorizontal(size)
+    if($fireSquares.eq(newRandomShip).hasClass('ship')) return makeShip(size)
+    else return newRandomShip
 
   }
 
@@ -72,17 +80,21 @@ $(() => {
 
   // place the cpu ships on "board"
   function placeCpuShips(){
+    $fireSquares.removeClass('ship')
     cpuShips.cpuBattleship = makeShip(4)
     cpuShips.cpuPatrolBoat = makeShip(2)
     cpuShips.cpuSubmarine = makeShip(3)
     cpuShips.cpuCarrier = makeShip(5)
     cpuShips.cpuDestroyer = makeShip(3)
     for(const ship in cpuShips){
-      cpuShips[ship].forEach(shipIndex => $fireSquares.eq(shipIndex).addClass('ship'))
+      cpuShips[ship].forEach(shipIndex => {
+        $fireSquares.eq(shipIndex).addClass('ship')
+      })
     }
-    console.log(cpuShips)
     return cpuShips
   }
+
+
 
   // allow user to place where ships are
   function placeUserShips(i){
@@ -92,14 +104,20 @@ $(() => {
     ship.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('ship'))
     // figure out which way user wants to move ship, and if it's possible
     $(document).on('keydown', e =>{
+      console.log(isVertical(ship))
       switch(e.keyCode){
-        case 37: if(ship[ship.length-1] % width > ship.length-1)moveShip(ship, 'left')
+        case 37: if(ship[ship.length-1] % width > ship.length-1 ||
+                  isVertical(ship)){
+          moveShip(ship, 'left')
+        }
           break
         case 38: if(ship[0] - width >= 0) moveShip(ship, 'up')
           break
         case 39: if(ship[0] % width < width-[ship.length]) moveShip(ship, 'right')
           break
         case 40: if(ship[0]+ width < width*width) moveShip(ship, 'down')
+          break
+        case 16: rotateShipVertical(ship)
           break
         case 13: if(i-1 > 0){
           i--
@@ -109,6 +127,42 @@ $(() => {
     })
   }
 
+  // check if ship is vertical
+  function isVertical(ship){
+    return ship.every(index => index % 10 === 0)
+  }
+
+
+
+  // check if ship needs to be rotated vertically or horizontally
+  // function rotateShip(ship){
+  //   ship.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('ship'))
+  //   ship = rotateShipVertical(ship)
+  //   ship.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('ship'))
+  //   return ship
+  // }
+
+  // rotate the ship vertically
+  function rotateShipVertical(ship){
+    const startingIndex = ship[0]
+    const shipLength = ship.length
+    const verticalShip = []
+    let m = 0
+    for(let i =0; i<shipLength; i++){
+      verticalShip.push(startingIndex + m)
+      m+= 10
+    }
+    verticalShip.forEach(index => {
+      ship.forEach(shipIndex => $shipSquares.eq(shipIndex).removeClass('ship'))
+      ship.unshift(index)
+      ship.pop()
+      ship.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('ship'))
+    })
+    for(const ship in ships){
+      ships[ship].forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('ship'))
+    }
+    return ship
+  }
 
   // move the ship
   function moveShip(ship, direction){
@@ -122,8 +176,11 @@ $(() => {
     for(const ship in ships){
       ships[ship].forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('ship'))
     }
+    console.log(ship)
     return ship
   }
+
+
 
   // determine where ship is going next
   function getNextIndex(ship, direction){
@@ -157,8 +214,7 @@ $(() => {
       alert('you hit')
       $fireSquares.eq(fireIndex).addClass('hit')
       cpuSquaresHit.push(fireIndex)
-      console.log(cpuSquaresHit)
-      cpuTurn()
+      cpuSquaresHit.length === 17 ? alert('You win!') : cpuTurn()
     }
   }
 
@@ -170,6 +226,7 @@ $(() => {
   // aiming for enemy ship
   function aim(){
     $fireSquares.eq(fireIndex).addClass('firing')
+    console.log(ships.patrolBoat)
     $(document).off()
     $(document).on('keydown', e => {
       $fireSquares.eq(fireIndex).removeClass('firing')
@@ -202,8 +259,7 @@ $(() => {
     } else{
       $shipSquares.eq(cpuTarget).addClass('hit')
       userSquaresHit.push(cpuTarget)
-      console.log(userSquaresHit)
-      userTurn()
+      userSquaresHit.length === 17 ? alert('You lose!') : cpuTurn()
     }
   }
 
