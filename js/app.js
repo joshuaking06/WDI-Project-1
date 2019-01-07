@@ -12,7 +12,7 @@ $(() => {
     submarine: [2,1,0],
     patrolBoat: [1,0]
   }
-
+  const takenIndexes = []
   const cpuShips = {
     cpuBattleship: [],
     cpuPatrolBoat: [],
@@ -49,10 +49,18 @@ $(() => {
   // generate random cpu ship
   function makeShip(size){
     const newRandomShip = Math.random() < 0.5 ? randomVertical(size) : randomHorizontal(size)
-    if($fireSquares.eq(newRandomShip).hasClass('ship')) return makeShip(size)
-    else return newRandomShip
-
+    if(takenIndexes.some(index => newRandomShip.includes(index))){
+      console.log('retrying')
+      return makeShip(size)
+    }
+    takenIndexes.push(...newRandomShip)
+    console.log(takenIndexes.some(index => newRandomShip.includes(index)))
+    return newRandomShip
   }
+
+
+
+
 
   // make random vertical
   function randomVertical(size){
