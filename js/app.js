@@ -13,6 +13,7 @@ $(() => {
     patrolBoat: [1,0]
   }
   const takenIndexes = []
+  const selectedSpaces = []
   const cpuShips = {
     cpuBattleship: [],
     cpuPatrolBoat: [],
@@ -50,11 +51,9 @@ $(() => {
   function makeShip(size){
     const newRandomShip = Math.random() < 0.5 ? randomVertical(size) : randomHorizontal(size)
     if(takenIndexes.some(index => newRandomShip.includes(index))){
-      console.log('retrying')
       return makeShip(size)
     }
     takenIndexes.push(...newRandomShip)
-    console.log(takenIndexes.some(index => newRandomShip.includes(index)))
     return newRandomShip
   }
 
@@ -99,6 +98,8 @@ $(() => {
         $fireSquares.eq(shipIndex).addClass('ship')
       })
     }
+
+
     return cpuShips
   }
 
@@ -109,7 +110,7 @@ $(() => {
     $(document).off()
     // choosing ship to begin placing
     const ship = Object.values(ships)[i-1]
-    ship.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('ship'))
+    ship.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('ship userShip'))
     // figure out which way user wants to move ship, and if it's possible
     $(document).on('keydown', e =>{
       switch(e.keyCode){
@@ -130,13 +131,37 @@ $(() => {
         case 16: if(!isVertical(ship))rotateShipVertical(ship)
           if(isVertical(ship))rotateShipHorizontal(ship)
           break
-        case 13: if(i-1 > 0){
+        case 13: if((i-1 > 0) && (!(selectedSpaces.some(index => ship.includes(index))))){
           i--
+          selectedSpaces.push(...ship)
           placeUserShips(i)
-        } else userTurn()
+        } else if((i === 1) && (!(selectedSpaces.some(index => ship.includes(index))))){
+          styleShips()
+          userTurn()
+        }
       }
     })
   }
+  // color the ships
+  function styleShips(){
+    ships.battleship.forEach(shipIndex => {
+      $shipSquares.eq(shipIndex).addClass('battleship')
+    })
+    ships.carrier.forEach(shipIndex => {
+      $shipSquares.eq(shipIndex).addClass('carrier')
+    })
+    ships.destroyer.forEach(shipIndex => {
+      console.log('adding class')
+      $shipSquares.eq(shipIndex).addClass('destroyer')
+    })
+    ships.submarine.forEach(shipIndex => {
+      $shipSquares.eq(shipIndex).addClass('submarine')
+    })
+    ships.patrolBoat.forEach(shipIndex => {
+      $shipSquares.eq(shipIndex).addClass('patrol-boat')
+    })
+  }
+
 
   // check if ship is vertical
   function isVertical(ship){
@@ -153,10 +178,10 @@ $(() => {
       horzShip.push(startingIndex + i)
     }
     horzShip.forEach(index => {
-      ship.forEach(shipIndex => $shipSquares.eq(shipIndex).removeClass('ship'))
+      ship.forEach(shipIndex => $shipSquares.eq(shipIndex).removeClass('ship userShip'))
       ship.unshift(index)
       ship.pop()
-      ship.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('ship'))
+      ship.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('ship userShip'))
     })
     console.log(ship.sort((a,b) => b-a))
     return ship.sort((a,b) => b-a)
@@ -176,10 +201,10 @@ $(() => {
       m+= 10
     }
     verticalShip.forEach(index => {
-      ship.forEach(shipIndex => $shipSquares.eq(shipIndex).removeClass('ship'))
+      ship.forEach(shipIndex => $shipSquares.eq(shipIndex).removeClass('ship userShip'))
       ship.unshift(index)
       ship.pop()
-      ship.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('ship'))
+      ship.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('ship userShip'))
     })
     console.log(ship.sort((a,b) => b-a))
     return ship.sort((a,b) => b-a)
@@ -189,14 +214,12 @@ $(() => {
   function moveShip(ship, direction){
     const nextIndex = getNextIndex(ship, direction).sort((a,b) => b-a)
     nextIndex.forEach(index => {
-      ship.forEach(shipIndex => $shipSquares.eq(shipIndex).removeClass('ship'))
+      ship.forEach(shipIndex => $shipSquares.eq(shipIndex).removeClass('ship userShip'))
       ship.unshift(index)
       ship.pop()
-      ship.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('ship'))
+      ship.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('ship userShip'))
     })
-    for(const ship in ships){
-      ships[ship].forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('ship'))
-    }
+    selectedSpaces.forEach(selectedSpace => $shipSquares.eq(selectedSpace).addClass('ship userShip'))
     console.log(ship)
     return ship
   }
@@ -233,6 +256,7 @@ $(() => {
     } else{
       $(document).off()
       alert('you hit')
+      $fireSquares.eq(fireIndex).removeClass()
       $fireSquares.eq(fireIndex).addClass('hit')
       cpuSquaresHit.push(fireIndex)
       cpuSquaresHit.length === 17 ? alert('You win!') : cpuTurn()
@@ -278,6 +302,7 @@ $(() => {
       $shipSquares.eq(cpuTarget).addClass('attacked')
       userTurn()
     } else{
+      $shipSquares.eq(cpuTarget).removeClass()
       $shipSquares.eq(cpuTarget).addClass('hit')
       userSquaresHit.push(cpuTarget)
       userSquaresHit.length === 17 ? alert('You lose!') : cpuTurn()

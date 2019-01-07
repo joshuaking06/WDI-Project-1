@@ -20,17 +20,33 @@ body{
         width: 10%;
         background-color: lightblue;
       }
-      .ship{
+      .userShip{
         background-color: black;
       }
       .firing{
         background-color: yellow;
       }
       .hit{
+        background-color: none;
         background-color: red;
       }
       .attacked{
         background-color: grey;
+      }
+      .battleship{
+        background-color: blue;
+      }
+      .carrier{
+        background-color: green;
+      }
+      .patrol-boat{
+        background-color: purple;
+      }
+      .submarine{
+        background-color: orange;
+      }
+      .destroyer{
+        background-color: darkblue;
       }
     }
   }
