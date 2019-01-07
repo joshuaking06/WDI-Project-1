@@ -7,7 +7,8 @@ $(() => {
   const width = 10
   const $recentActionUser = $('#recent-action-user')
   const $recentActionCpu = $('#recent-action-cpu')
-
+  let recentlyHit
+  let originalHit
   const ships =[
     {
       name: 'carrier',
@@ -296,14 +297,15 @@ $(() => {
   }
 
   // function for cpu attack
-  function cpuFire(hitBefore){
-    const cpuTarget = hitBefore +1 || (Math.floor(Math.random() * 99) + 0)
+  function cpuFire(){
+    const cpuTarget = recentlyHit +1 || (Math.floor(Math.random() * 99) + 0)
     if($shipSquares.eq(cpuTarget).hasClass('hit') ||
       $shipSquares.eq(cpuTarget).hasClass('attacked')){
       return cpuFire()
     } else if(!$shipSquares.eq(cpuTarget).hasClass('ship')){
       $shipSquares.eq(cpuTarget).addClass('attacked')
       $recentActionCpu.text('The Enemy Missed')
+      recentlyHit = undefined
       setTimeout(function(){
         userTurn()
       }, 1000)
@@ -312,11 +314,14 @@ $(() => {
       $shipSquares.eq(cpuTarget).addClass('hit')
       $recentActionCpu.text('The Enemy Hit Your Ship!')
       userSquaresHit.push(cpuTarget)
+      recentlyHit = cpuTarget
       ships.forEach(obj => {
         if((obj.index.every(index => userSquaresHit.includes(index))) &&
         (obj.sunk === false)){
           $recentActionCpu.text(`The enemy has sunk your ${obj.name}`)
           obj.sunk = true
+          recentlyHit = undefined
+          originalHit = undefined
         }
       })
       userSquaresHit.length === 17 ? alert('You lose!') : setTimeout(function(){
