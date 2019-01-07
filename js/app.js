@@ -5,7 +5,7 @@ $(() => {
   const $shipGrid = $('.ship-grid')
   const $fireGrid = $('.fire-grid')
   const width = 10
-  
+
   const ships =[
     {
       name: 'carrier',
@@ -32,22 +32,31 @@ $(() => {
   console.log(ships[1].index)
 
 
-  const cpuBattleship ={
-    name: 'Enemy BattleShip',
-    sunk: false
-  }
+  const cpuShips = [
+    {
+      name: 'cpuBattleship',
+      sunk: false
+    },{
+      name: 'cpuPatrolBoat',
+      sunk: false
+    },{
+      name: 'cpuSubmarine',
+      sunk: false
+    },{
+      name: 'cpuCarrier',
+      sunk: false
+    },{
+      name: 'cpuDestroyer',
+      sunk: false
+    }
+
+  ]
+
 
 
   const takenIndexes = []
   const selectedSpaces = []
 
-  const cpuShips = {
-    cpuBattleship: [],
-    cpuPatrolBoat: [],
-    cpuSubmarine: [],
-    cpuCarrier: [],
-    cpuDestroyer: []
-  }
 
 
   let fireIndex = 0
@@ -101,23 +110,19 @@ $(() => {
     return horizontal
   }
 
-  function updateIndexes(){
-    cpuBattleship.index = cpuShips.cpuBattleship
-  }
-
   // place the cpu ships on "board"
   function placeCpuShips(){
     $fireSquares.removeClass('ship')
-    cpuShips.cpuBattleship = makeShip(4)
-    cpuShips.cpuPatrolBoat = makeShip(2)
-    cpuShips.cpuSubmarine = makeShip(3)
-    cpuShips.cpuCarrier = makeShip(5)
-    cpuShips.cpuDestroyer = makeShip(3)
-    for(const ship in cpuShips){
-      cpuShips[ship].forEach(shipIndex => {
-        $fireSquares.eq(shipIndex).addClass('ship')
+    cpuShips[0].index = makeShip(4)
+    cpuShips[1].index = makeShip(2)
+    cpuShips[2].index = makeShip(3)
+    cpuShips[3].index= makeShip(5)
+    cpuShips[4].index = makeShip(3)
+    cpuShips.forEach(obj => {
+      obj.index.forEach(index => {
+        $fireSquares.eq(index).addClass('ship')
       })
-    }
+    })
 
     return cpuShips
   }
@@ -205,7 +210,6 @@ $(() => {
       ship.pop()
       ship.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('ship userShip'))
     })
-    console.log(ship.sort((a,b) => b-a))
     return ship.sort((a,b) => b-a)
   }
 
@@ -219,7 +223,6 @@ $(() => {
       ship.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('ship userShip'))
     })
     selectedSpaces.forEach(selectedSpace => $shipSquares.eq(selectedSpace).addClass('ship userShip'))
-    console.log(ship)
     return ship
   }
 
@@ -251,15 +254,22 @@ $(() => {
       $fireSquares.eq(fireIndex).removeClass()
       $fireSquares.eq(fireIndex).addClass('hit')
       cpuSquaresHit.push(fireIndex)
+      cpuShips.forEach(obj => {
+        if((obj.index.every(index => cpuSquaresHit.includes(index))) &&
+        (obj.sunk === false)){
+          alert(`you sunk the ${obj.name}`)
+          obj.sunk = true
+        }
+      })
       cpuSquaresHit.length === 17 ? alert('You win!') : cpuTurn()
     }
+
   }
 
 
   // aiming for enemy ship
   function aim(){
     $fireSquares.eq(fireIndex).addClass('firing')
-    console.log(ships.patrolBoat)
     $(document).off()
     $(document).on('keydown', e => {
       $fireSquares.eq(fireIndex).removeClass('firing')
@@ -291,7 +301,6 @@ $(() => {
       $shipSquares.eq(cpuTarget).removeClass()
       $shipSquares.eq(cpuTarget).addClass('hit')
       userSquaresHit.push(cpuTarget)
-
       userSquaresHit.length === 17 ? alert('You lose!') : cpuTurn()
     }
   }
@@ -314,7 +323,6 @@ $(() => {
   // starting the game
   function play(){
     placeCpuShips()
-    updateIndexes()
     placeUserShips(0)
   }
 
