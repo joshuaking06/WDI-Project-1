@@ -150,10 +150,10 @@ $(() => {
           moveShip(ship, 'right')
         }
           break
-        case 40: if(ship[0]+ width < width*width) moveShip(ship, 'down')
+        case 40: if(ship[ship.length-1]+ width < width*width) moveShip(ship, 'down')
           break
-        case 16: if(!isVertical(ship))rotateShipVertical(ship)
-          if(isVertical(ship))rotateShipHorizontal(ship)
+        case 16: if((!isVertical(ship)) && (ship[ship.length-1]+ width < width*width)) rotateShipVertical(ship)
+          if((isVertical(ship)) && (ship[0] % width < width-[ship.length-1]) )rotateShipHorizontal(ship)
           break
         case 13: if((i < 4) && (!(selectedSpaces.some(index => ship.includes(index))))){
           i++
