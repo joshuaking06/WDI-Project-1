@@ -23,9 +23,6 @@ body{
       .userShip{
         background-color: black;
       }
-      .firing{
-        background-color: yellow;
-      }
       .hit{
         background-color: none;
         background-color: red;
@@ -33,13 +30,16 @@ body{
       .attacked{
         background-color: grey;
       }
+      .firing{
+        background-color: yellow;
+      }
       .battleship{
         background-color: blue;
       }
       .carrier{
         background-color: green;
       }
-      .patrol-boat{
+      .patrolboat{
         background-color: purple;
       }
       .submarine{
