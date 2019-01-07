@@ -250,7 +250,9 @@ $(() => {
       $(document).off()
       $recentActionUser.text('You missed!')
       $fireSquares.eq(fireIndex).addClass('attacked')
-      cpuTurn()
+      setTimeout(function(){
+        cpuTurn()
+      }, 1000)
     } else{
       $(document).off()
       $fireSquares.eq(fireIndex).removeClass()
@@ -264,7 +266,9 @@ $(() => {
           obj.sunk = true
         }
       })
-      cpuSquaresHit.length === 17 ? alert('You win!') : cpuTurn()
+      cpuSquaresHit.length === 17 ? alert('You win!') : setTimeout(function(){
+        cpuTurn()
+      }, 1000)
     }
 
   }
@@ -300,7 +304,9 @@ $(() => {
     } else if(!$shipSquares.eq(cpuTarget).hasClass('ship')){
       $shipSquares.eq(cpuTarget).addClass('attacked')
       $recentActionCpu.text('The Enemy Missed')
-      userTurn()
+      setTimeout(function(){
+        userTurn()
+      }, 1000)
     } else{
       $shipSquares.eq(cpuTarget).removeClass()
       $shipSquares.eq(cpuTarget).addClass('hit')
@@ -313,7 +319,9 @@ $(() => {
           obj.sunk = true
         }
       })
-      userSquaresHit.length === 17 ? alert('You lose!') : cpuTurn()
+      userSquaresHit.length === 17 ? alert('You lose!') : setTimeout(function(){
+        userTurn()
+      }, 1000)
     }
   }
 
