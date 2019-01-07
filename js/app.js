@@ -8,7 +8,6 @@ $(() => {
   const $recentActionUser = $('#recent-action-user')
   const $recentActionCpu = $('#recent-action-cpu')
   let recentlyHit
-  let originalHit
   const ships =[
     {
       name: 'carrier',
@@ -321,7 +320,6 @@ $(() => {
           $recentActionCpu.text(`The enemy has sunk your ${obj.name}`)
           obj.sunk = true
           recentlyHit = undefined
-          originalHit = undefined
         }
       })
       userSquaresHit.length === 17 ? alert('You lose!') : setTimeout(function(){
