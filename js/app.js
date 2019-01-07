@@ -301,6 +301,13 @@ $(() => {
       $shipSquares.eq(cpuTarget).removeClass()
       $shipSquares.eq(cpuTarget).addClass('hit')
       userSquaresHit.push(cpuTarget)
+      ships.forEach(obj => {
+        if((obj.index.every(index => userSquaresHit.includes(index))) &&
+        (obj.sunk === false)){
+          alert(`The enemy has sunk your ${obj.name}`)
+          obj.sunk = true
+        }
+      })
       userSquaresHit.length === 17 ? alert('You lose!') : cpuTurn()
     }
   }
