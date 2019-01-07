@@ -5,6 +5,8 @@ $(() => {
   const $shipGrid = $('.ship-grid')
   const $fireGrid = $('.fire-grid')
   const width = 10
+  const $recentActionUser = $('#recent-action-user')
+  const $recentActionCpu = $('#recent-action-cpu')
 
   const ships =[
     {
@@ -34,19 +36,19 @@ $(() => {
 
   const cpuShips = [
     {
-      name: 'cpuBattleship',
+      name: 'Enemy Battleship',
       sunk: false
     },{
-      name: 'cpuPatrolBoat',
+      name: 'Enemy Patrol Boat',
       sunk: false
     },{
-      name: 'cpuSubmarine',
+      name: 'Enemy Submarine',
       sunk: false
     },{
-      name: 'cpuCarrier',
+      name: 'Enemy Carrier',
       sunk: false
     },{
-      name: 'cpuDestroyer',
+      name: 'Enemy Destroyer',
       sunk: false
     }
 
@@ -213,6 +215,7 @@ $(() => {
     return ship.sort((a,b) => b-a)
   }
 
+
   // move the ship
   function moveShip(ship, direction){
     const nextIndex = getNextIndex(ship, direction).sort((a,b) => b-a)
@@ -242,22 +245,22 @@ $(() => {
   function fire(){
     if($fireSquares.eq(fireIndex).hasClass('hit') ||
       $fireSquares.eq(fireIndex).hasClass('attacked')){
-      alert('you already hit here,try again')
+      $recentActionUser.text('you already hit here,try again')
     } else if(!$fireSquares.eq(fireIndex).hasClass('ship')){
       $(document).off()
-      alert('you missed')
+      $recentActionUser.text('You missed!')
       $fireSquares.eq(fireIndex).addClass('attacked')
       cpuTurn()
     } else{
       $(document).off()
-      alert('you hit')
       $fireSquares.eq(fireIndex).removeClass()
       $fireSquares.eq(fireIndex).addClass('hit')
+      $recentActionUser.text('You hit an Enemy Ship!')
       cpuSquaresHit.push(fireIndex)
       cpuShips.forEach(obj => {
         if((obj.index.every(index => cpuSquaresHit.includes(index))) &&
         (obj.sunk === false)){
-          alert(`you sunk the ${obj.name}`)
+          $recentActionUser.text(`you sunk the ${obj.name}`)
           obj.sunk = true
         }
       })
@@ -296,15 +299,17 @@ $(() => {
       return cpuFire()
     } else if(!$shipSquares.eq(cpuTarget).hasClass('ship')){
       $shipSquares.eq(cpuTarget).addClass('attacked')
+      $recentActionCpu.text('The Enemy Missed')
       userTurn()
     } else{
       $shipSquares.eq(cpuTarget).removeClass()
       $shipSquares.eq(cpuTarget).addClass('hit')
+      $recentActionCpu.text('The Enemy Hit Your Ship!')
       userSquaresHit.push(cpuTarget)
       ships.forEach(obj => {
         if((obj.index.every(index => userSquaresHit.includes(index))) &&
         (obj.sunk === false)){
-          alert(`The enemy has sunk your ${obj.name}`)
+          $recentActionCpu.text(`The enemy has sunk your ${obj.name}`)
           obj.sunk = true
         }
       })

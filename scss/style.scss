@@ -5,6 +5,10 @@
 body{
   width: 80%;
   margin: 10% auto;
+  .board-display{
+    display: flex;
+    justify-content: space-around;
+  }
   .game-board{
     display: flex;
     justify-content: space-between;
