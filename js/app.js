@@ -4,11 +4,11 @@ $(() => {
 
   const $shipGrid = $('.ship-grid')
   const $fireGrid = $('.fire-grid')
-  const width = 10
   const $recentActionUser = $('#recent-action-user')
   const $recentActionCpu = $('#recent-action-cpu')
-  let recentlyHit
   const $resetBtn = $('.reset')
+  let recentlyHit
+  const width = 10
   const ships =[
     {
       name: 'carrier',
@@ -33,7 +33,6 @@ $(() => {
     }
   ]
 
-
   const cpuShips = [
     {
       name: 'Enemy Battleship',
@@ -54,13 +53,8 @@ $(() => {
 
   ]
 
-
-
   let takenIndexes = []
   let selectedSpaces = []
-
-
-
   let fireIndex = 0
   let cpuSquaresHit = []
   let userSquaresHit = []
@@ -69,12 +63,13 @@ $(() => {
   for(let i = 0; i<width*width; i++) {
     $shipGrid.append($('<div />'))
     $fireGrid.append($('<div />'))
-    // cpuGrid.push(i)
   }
 
   // define the squares in each grid
   const $fireSquares = $fireGrid.find('div')
   const $shipSquares = $shipGrid.find('div')
+
+
 
   //                                                   CPU SHIP PLACEMENT
   // --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -110,6 +105,17 @@ $(() => {
       horizontal.push(randomIndexH + i)
     }
     return horizontal
+  }
+
+
+  // used for updating index of ship
+  function updateShipArray(baseArray, shipArray, i){
+    baseArray.forEach(index => {
+      shipArray.forEach(shipIndex => $shipSquares.eq(shipIndex).removeClass(`ship ${ships[i].name}`))
+      shipArray.unshift(index)
+      shipArray.pop()
+      shipArray.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass(`ship ${ships[i].name}`))
+    })
   }
 
   // place the cpu ships on "board"
@@ -191,12 +197,7 @@ $(() => {
     for(let i =0; i< ship.length; i++){
       horzShip.push(startingIndex + i)
     }
-    horzShip.forEach(index => {
-      ship.forEach(shipIndex => $shipSquares.eq(shipIndex).removeClass(`ship ${ships[i].name}`))
-      ship.unshift(index)
-      ship.pop()
-      ship.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass(`ship ${ships[i].name}`))
-    })
+    updateShipArray(horzShip, ship, i)
     return ship.sort((a,b) => b-a)
   }
 
@@ -210,12 +211,7 @@ $(() => {
       verticalShip.push(startingIndex + m)
       m+= 10
     }
-    verticalShip.forEach(index => {
-      ship.forEach(shipIndex => $shipSquares.eq(shipIndex).removeClass(`ship ${ships[i].name}`))
-      ship.unshift(index)
-      ship.pop()
-      ship.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass(`ship ${ships[i].name}`))
-    })
+    updateShipArray(verticalShip, ship, i)
     return ship.sort((a,b) => b-a)
   }
   //                                    SHIP MOVEMENT
@@ -223,12 +219,7 @@ $(() => {
   // move the ship
   function moveShip(ship,i, direction){
     const nextIndex = getNextIndex(ship, direction).sort((a,b) => b-a)
-    nextIndex.forEach(index => {
-      ship.forEach(shipIndex => $shipSquares.eq(shipIndex).removeClass(`ship ${ships[i].name}`))
-      ship.unshift(index)
-      ship.pop()
-      ship.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass(`ship ${ships[i].name}`))
-    })
+    updateShipArray(nextIndex, ship, i)
     selectedSpaces.forEach(selectedSpace => $shipSquares.eq(selectedSpace).addClass('ship'))
     return ship
   }
@@ -394,5 +385,5 @@ $(() => {
   }
 
   play()
-  
+
 })
