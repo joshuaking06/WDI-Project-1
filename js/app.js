@@ -8,6 +8,7 @@ $(() => {
   const $recentActionUser = $('#recent-action-user')
   const $recentActionCpu = $('#recent-action-cpu')
   let recentlyHit
+  const $resetBtn = $('.reset')
   const ships =[
     {
       name: 'carrier',
@@ -31,7 +32,6 @@ $(() => {
       sunk: false
     }
   ]
-  console.log(ships[1].index)
 
 
   const cpuShips = [
@@ -56,14 +56,14 @@ $(() => {
 
 
 
-  const takenIndexes = []
-  const selectedSpaces = []
+  let takenIndexes = []
+  let selectedSpaces = []
 
 
 
   let fireIndex = 0
-  const cpuSquaresHit = []
-  const userSquaresHit = []
+  let cpuSquaresHit = []
+  let userSquaresHit = []
 
   // make grid for user fire, user ships, and cpu grid(array)
   for(let i = 0; i<width*width; i++) {
@@ -76,7 +76,7 @@ $(() => {
   const $fireSquares = $fireGrid.find('div')
   const $shipSquares = $shipGrid.find('div')
 
-  //                                                    SHIP PLACEMENT
+  //                                                   CPU SHIP PLACEMENT
   // --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   // generate random cpu ship
   function makeShip(size){
@@ -128,7 +128,8 @@ $(() => {
 
     return cpuShips
   }
-
+  //                                                    USER SHIP PLACEMENT
+  // ------------------------------------------------------------------------------------------------------------------
   // allow user to place where ships are
   function placeUserShips(i){
     $(document).off()
@@ -157,6 +158,8 @@ $(() => {
           break
         case 13: if((i < 4) && (!(selectedSpaces.some(index => ship.includes(index))))){
           i++
+          console.log(i , 'i')
+          console.log(selectedSpaces, 'selected space' )
           selectedSpaces.push(...ship)
           placeUserShips(i)
         } else if((i === 4) && (!(selectedSpaces.some(index => ship.includes(index))))){
@@ -174,7 +177,8 @@ $(() => {
       })
     })
   }
-
+  //                                  SHIP ROTATION
+  // -------------------------------------------------------------------------------------------------------
   // check if ship is vertical
   function isVertical(ship){
     return ship[1] - ship[0] === 10
@@ -214,8 +218,8 @@ $(() => {
     })
     return ship.sort((a,b) => b-a)
   }
-
-
+  //                                    SHIP MOVEMENT
+  //-------------------------------------------------------------------------------------------------------------
   // move the ship
   function moveShip(ship,i, direction){
     const nextIndex = getNextIndex(ship, direction).sort((a,b) => b-a)
@@ -296,18 +300,32 @@ $(() => {
   }
 
   // function for cpu attack
+  function smartAttack(){
+    if(!recentlyHit) return undefined
+    if((!($shipSquares.eq(recentlyHit +1).hasClass('attacked'))) &&
+      (!($shipSquares.eq(recentlyHit +1).hasClass('hit')))) return recentlyHit+1
+    if((!($shipSquares.eq(recentlyHit-1).hasClass('hit'))) &&
+      (!($shipSquares.eq(recentlyHit-1).hasClass('attacked')))) return recentlyHit-1
+    if((!($shipSquares.eq(recentlyHit+width).hasClass('hit'))) &&
+      (!($shipSquares.eq(recentlyHit+width).hasClass('attacked')))) return recentlyHit+width
+    if((!($shipSquares.eq(recentlyHit-width).hasClass('hit'))) &&
+      (!($shipSquares.eq(recentlyHit-width).hasClass('attacked')))) return recentlyHit-width
+  }
+
+
+
   function cpuFire(){
-    const cpuTarget = recentlyHit +1 || (Math.floor(Math.random() * 99) + 0)
+    const cpuTarget = smartAttack() || (Math.floor(Math.random() * 99) + 0)
+    console.log(cpuTarget)
     if($shipSquares.eq(cpuTarget).hasClass('hit') ||
       $shipSquares.eq(cpuTarget).hasClass('attacked')){
       return cpuFire()
     } else if(!$shipSquares.eq(cpuTarget).hasClass('ship')){
       $shipSquares.eq(cpuTarget).addClass('attacked')
       $recentActionCpu.text('The Enemy Missed')
-      recentlyHit = undefined
       setTimeout(function(){
         userTurn()
-      }, 1000)
+      }, 700)
     } else{
       $shipSquares.eq(cpuTarget).removeClass()
       $shipSquares.eq(cpuTarget).addClass('hit')
@@ -324,8 +342,34 @@ $(() => {
       })
       userSquaresHit.length === 17 ? alert('You lose!') : setTimeout(function(){
         userTurn()
-      }, 1000)
+      }, 700)
     }
+  }
+
+  $resetBtn.on('click', resetGame)
+
+  function resetIndices(){
+    ships[0].index = [4,3,2,1,0]
+    ships[1].index = [3,2,1,0]
+    ships[2].index = [2,1,0]
+    ships[3].index = [2,1,0]
+    ships[4].index = [1,0]
+  }
+
+  // to reset the game to start
+  function resetGame(e){
+    resetIndices()
+    $shipSquares.removeClass()
+    $fireSquares.removeClass()
+    ships.forEach(ship => ship.sunk = false)
+    cpuShips.forEach(ship => ship.sunk = false)
+    takenIndexes = []
+    selectedSpaces = []
+    fireIndex = 0
+    cpuSquaresHit = []
+    userSquaresHit = []
+    e.target.blur()
+    play()
   }
 
   //                                      TURN MANAGEMENT
