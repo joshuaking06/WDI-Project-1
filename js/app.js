@@ -300,6 +300,18 @@ $(() => {
 
     if((!($shipSquares.eq(recentlyHit-width).hasClass('hit'))) &&
       (!($shipSquares.eq(recentlyHit-width).hasClass('attacked')))) return recentlyHit-width
+
+    if((!($shipSquares.eq(recentlyHit+width*2).hasClass('hit'))) &&
+      (!($shipSquares.eq(recentlyHit+width*2).hasClass('attacked')))) return recentlyHit+width*2
+
+    if((!($shipSquares.eq(recentlyHit-width*2).hasClass('hit'))) &&
+      (!($shipSquares.eq(recentlyHit-width*2).hasClass('attacked')))) return recentlyHit-width*2
+
+    if((!($shipSquares.eq(recentlyHit+width*3).hasClass('hit'))) &&
+      (!($shipSquares.eq(recentlyHit+width*3).hasClass('attacked')))) return recentlyHit+width*3
+
+    if((!($shipSquares.eq(recentlyHit-width*3).hasClass('hit'))) &&
+      (!($shipSquares.eq(recentlyHit-width*3).hasClass('attacked')))) return recentlyHit-width*3
   }
 
 
