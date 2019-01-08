@@ -280,9 +280,21 @@ $(() => {
     })
   }
 
-  // function for cpu attack
+  // function for cpu intelligent attacks based on previous checks
   function smartAttack(){
     if(!recentlyHit) return undefined
+
+    if(($shipSquares.eq(recentlyHit-1).hasClass('hit')) &&
+      ($shipSquares.eq(recentlyHit-2).hasClass('hit')) &&
+      ($shipSquares.eq(recentlyHit+1).hasClass('attacked')) &&
+      (!($shipSquares.eq(recentlyHit -4).hasClass('attacked'))) &&
+      (!($shipSquares.eq(recentlyHit -4).hasClass('hit')))) return recentlyHit-4
+
+    if(($shipSquares.eq(recentlyHit-1).hasClass('hit')) &&
+      ($shipSquares.eq(recentlyHit+1).hasClass('attacked')) &&
+      ($shipSquares.eq(recentlyHit-2).hasClass('hit')) &&
+      (!($shipSquares.eq(recentlyHit -3).hasClass('attacked'))) &&
+      (!($shipSquares.eq(recentlyHit -3).hasClass('hit')))) return recentlyHit-3
 
     if(($shipSquares.eq(recentlyHit-1).hasClass('hit')) &&
       ($shipSquares.eq(recentlyHit+1).hasClass('attacked')) &&
@@ -315,7 +327,7 @@ $(() => {
   }
 
 
-
+  // cpu attack function
   function cpuFire(){
     const cpuTarget = smartAttack() || (Math.floor(Math.random() * 99) + 0)
     console.log(cpuTarget)
