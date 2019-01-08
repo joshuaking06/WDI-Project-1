@@ -350,6 +350,7 @@ $(() => {
     cpuSquaresHit = []
     userSquaresHit = []
     userSquaresAttacked = []
+    console.log(e.target)
     e.target.blur()
     play()
   }
@@ -377,13 +378,13 @@ $(() => {
     cpuFire()
   }
   //start the game
-  function play(e){
-    e.target.blur()
+  function play(){
     $startBtn.hide()
     $gameBoard.show()
     placeCpuShips()
     placeUserShips(0)
   }
+
   function init(){
     $gameBoard.hide()
     $startBtn.on('click', play)
