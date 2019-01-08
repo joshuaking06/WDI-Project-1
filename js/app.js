@@ -283,12 +283,21 @@ $(() => {
   // function for cpu attack
   function smartAttack(){
     if(!recentlyHit) return undefined
+
+    if(($shipSquares.eq(recentlyHit-1).hasClass('hit')) &&
+      ($shipSquares.eq(recentlyHit+1).hasClass('attacked')) &&
+      (!($shipSquares.eq(recentlyHit -2).hasClass('attacked'))) &&
+      (!($shipSquares.eq(recentlyHit -2).hasClass('hit')))) return recentlyHit-2
+
     if((!($shipSquares.eq(recentlyHit +1).hasClass('attacked'))) &&
       (!($shipSquares.eq(recentlyHit +1).hasClass('hit')))) return recentlyHit+1
+
     if((!($shipSquares.eq(recentlyHit-1).hasClass('hit'))) &&
       (!($shipSquares.eq(recentlyHit-1).hasClass('attacked')))) return recentlyHit-1
+
     if((!($shipSquares.eq(recentlyHit+width).hasClass('hit'))) &&
       (!($shipSquares.eq(recentlyHit+width).hasClass('attacked')))) return recentlyHit+width
+
     if((!($shipSquares.eq(recentlyHit-width).hasClass('hit'))) &&
       (!($shipSquares.eq(recentlyHit-width).hasClass('attacked')))) return recentlyHit-width
   }
