@@ -7,6 +7,8 @@ $(() => {
   const $recentActionUser = $('#recent-action-user')
   const $recentActionCpu = $('#recent-action-cpu')
   const $resetBtn = $('.reset')
+  const $gameBoard = $('.game-board')
+  const $startBtn = $('.start-button')
   let recentlyHit
   const width = 10
   const ships =[
@@ -58,6 +60,7 @@ $(() => {
   let fireIndex = 0
   let cpuSquaresHit = []
   let userSquaresHit = []
+  let userSquaresAttacked =[]
 
   // make grid for user fire, user ships, and cpu grid(array)
   for(let i = 0; i<width*width; i++) {
@@ -204,10 +207,9 @@ $(() => {
   // rotate the ship vertically
   function rotateShipVertical(ship, i){
     const startingIndex = ship[0]
-    const shipLength = ship.length
     const verticalShip = []
     let m = 0
-    for(let i =0; i<shipLength; i++){
+    for(let i =0; i<ship.length; i++){
       verticalShip.push(startingIndex + m)
       m+= 10
     }
@@ -253,7 +255,7 @@ $(() => {
       $recentActionUser.text('You hit an Enemy Ship!')
       cpuSquaresHit.push(fireIndex)
       checkForSunk(cpuShips, cpuSquaresHit, $recentActionUser)
-      cpuSquaresHit.length === 17 ? alert('You win!') : setTimeout(() => cpuTurn(), 700)
+      cpuSquaresHit.length === 17 ? alert('you win') : setTimeout(() => cpuTurn(), 700)
     }
 
   }
@@ -283,53 +285,35 @@ $(() => {
   // function for cpu intelligent attacks based on previous checks
   function smartAttack(){
     if(!recentlyHit) return undefined
+    if((!(userSquaresAttacked.includes(recentlyHit+1)))) return recentlyHit+1
+    if((!(userSquaresAttacked.includes(recentlyHit-1)))) return recentlyHit-1
 
-    if(($shipSquares.eq(recentlyHit-1).hasClass('hit')) &&
-      ($shipSquares.eq(recentlyHit-2).hasClass('hit')) &&
-      ($shipSquares.eq(recentlyHit+1).hasClass('attacked')) &&
-      (!($shipSquares.eq(recentlyHit -4).hasClass('attacked'))) &&
-      (!($shipSquares.eq(recentlyHit -4).hasClass('hit')))) return recentlyHit-4
+    if((!(userSquaresAttacked.includes(recentlyHit-1))) &&
+    (!(userSquaresAttacked.includes(recentlyHit+1))) &&
+    (!(userSquaresAttacked.includes(recentlyHit-2)))) return recentlyHit-2
 
-    if(($shipSquares.eq(recentlyHit-1).hasClass('hit')) &&
-      ($shipSquares.eq(recentlyHit+1).hasClass('attacked')) &&
-      ($shipSquares.eq(recentlyHit-2).hasClass('hit')) &&
-      (!($shipSquares.eq(recentlyHit -3).hasClass('attacked'))) &&
-      (!($shipSquares.eq(recentlyHit -3).hasClass('hit')))) return recentlyHit-3
+    if((!(userSquaresAttacked.includes(recentlyHit+width)))) return recentlyHit+width
+    if((!(userSquaresAttacked.includes(recentlyHit-width)))) return recentlyHit-width
+    if((!(userSquaresAttacked.includes(recentlyHit+width*2)))) return recentlyHit+width*2
+    if((!(userSquaresAttacked.includes(recentlyHit-width*2)))) return recentlyHit-width*2
 
-    if(($shipSquares.eq(recentlyHit-1).hasClass('hit')) &&
-      ($shipSquares.eq(recentlyHit+1).hasClass('attacked')) &&
-      (!($shipSquares.eq(recentlyHit -2).hasClass('attacked'))) &&
-      (!($shipSquares.eq(recentlyHit -2).hasClass('hit')))) return recentlyHit-2
 
-    if((!($shipSquares.eq(recentlyHit +1).hasClass('attacked'))) &&
-      (!($shipSquares.eq(recentlyHit +1).hasClass('hit')))) return recentlyHit+1
+    if((!(userSquaresAttacked.includes(recentlyHit-1))) &&
+    (!(userSquaresAttacked.includes(recentlyHit+1))) &&
+    (!(userSquaresAttacked.includes(recentlyHit-2)))&&
+    (!(userSquaresAttacked.includes(recentlyHit-3)))) return recentlyHit-3
 
-    if((!($shipSquares.eq(recentlyHit-1).hasClass('hit'))) &&
-      (!($shipSquares.eq(recentlyHit-1).hasClass('attacked')))) return recentlyHit-1
-
-    if((!($shipSquares.eq(recentlyHit+width).hasClass('hit'))) &&
-      (!($shipSquares.eq(recentlyHit+width).hasClass('attacked')))) return recentlyHit+width
-
-    if((!($shipSquares.eq(recentlyHit-width).hasClass('hit'))) &&
-      (!($shipSquares.eq(recentlyHit-width).hasClass('attacked')))) return recentlyHit-width
-
-    if((!($shipSquares.eq(recentlyHit+width*2).hasClass('hit'))) &&
-      (!($shipSquares.eq(recentlyHit+width*2).hasClass('attacked')))) return recentlyHit+width*2
-
-    if((!($shipSquares.eq(recentlyHit-width*2).hasClass('hit'))) &&
-      (!($shipSquares.eq(recentlyHit-width*2).hasClass('attacked')))) return recentlyHit-width*2
-
-    if((!($shipSquares.eq(recentlyHit+width*3).hasClass('hit'))) &&
-      (!($shipSquares.eq(recentlyHit+width*3).hasClass('attacked')))) return recentlyHit+width*3
-
-    if((!($shipSquares.eq(recentlyHit-width*3).hasClass('hit'))) &&
-      (!($shipSquares.eq(recentlyHit-width*3).hasClass('attacked')))) return recentlyHit-width*3
+    if((!(userSquaresAttacked.includes(recentlyHit-1))) &&
+      (!(userSquaresAttacked.includes(recentlyHit-2))) &&
+      (!(userSquaresAttacked.includes(recentlyHit+1)))&&
+      (!(userSquaresAttacked.includes(recentlyHit-4)))) return recentlyHit-4
   }
 
 
   // cpu attack function
   function cpuFire(){
     const cpuTarget = smartAttack() || (Math.floor(Math.random() * 99) + 0)
+    console.log(userSquaresAttacked)
     console.log(cpuTarget)
     if($shipSquares.eq(cpuTarget).hasClass('hit') ||
       $shipSquares.eq(cpuTarget).hasClass('attacked')){
@@ -337,15 +321,17 @@ $(() => {
     } else if(!$shipSquares.eq(cpuTarget).hasClass('ship')){
       $shipSquares.eq(cpuTarget).addClass('attacked')
       $recentActionCpu.text('The Enemy Missed')
+      userSquaresAttacked.push(cpuTarget)
       setTimeout(() => userTurn(), 700)
     } else{
       $shipSquares.eq(cpuTarget).removeClass()
       $shipSquares.eq(cpuTarget).addClass('hit')
       $recentActionCpu.text('The Enemy Hit Your Ship!')
       userSquaresHit.push(cpuTarget)
+      userSquaresAttacked.push(cpuTarget)
       recentlyHit = cpuTarget
       checkForSunk(ships, userSquaresHit, $recentActionCpu, true)
-      userSquaresHit.length === 17 ? alert('You lose!') : setTimeout(() => userTurn(), 700)
+      userSquaresHit.length === 17 ? alert('you lose!') : setTimeout(() => userTurn(), 700)
     }
   }
 
@@ -363,6 +349,7 @@ $(() => {
     fireIndex = 0
     cpuSquaresHit = []
     userSquaresHit = []
+    userSquaresAttacked = []
     e.target.blur()
     play()
   }
@@ -390,11 +377,18 @@ $(() => {
     cpuFire()
   }
   //start the game
-  function play(){
+  function play(e){
+    e.target.blur()
+    $startBtn.hide()
+    $gameBoard.show()
     placeCpuShips()
     placeUserShips(0)
   }
+  function init(){
+    $gameBoard.hide()
+    $startBtn.on('click', play)
+  }
 
-  play()
+  init()
 
 })
