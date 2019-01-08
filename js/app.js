@@ -245,25 +245,15 @@ $(() => {
       $(document).off()
       $recentActionUser.text('You missed!')
       $fireSquares.eq(fireIndex).addClass('attacked')
-      setTimeout(function(){
-        cpuTurn()
-      }, 1000)
+      setTimeout(() => cpuTurn(), 700)
     } else{
       $(document).off()
       $fireSquares.eq(fireIndex).removeClass()
       $fireSquares.eq(fireIndex).addClass('hit')
       $recentActionUser.text('You hit an Enemy Ship!')
       cpuSquaresHit.push(fireIndex)
-      cpuShips.forEach(obj => {
-        if((obj.index.every(index => cpuSquaresHit.includes(index))) &&
-        (obj.sunk === false)){
-          $recentActionUser.text(`you sunk the ${obj.name}`)
-          obj.sunk = true
-        }
-      })
-      cpuSquaresHit.length === 17 ? alert('You win!') : setTimeout(function(){
-        cpuTurn()
-      }, 1000)
+      checkForSunk(cpuShips, cpuSquaresHit, $recentActionUser)
+      cpuSquaresHit.length === 17 ? alert('You win!') : setTimeout(() => cpuTurn(), 700)
     }
 
   }
@@ -314,42 +304,23 @@ $(() => {
     } else if(!$shipSquares.eq(cpuTarget).hasClass('ship')){
       $shipSquares.eq(cpuTarget).addClass('attacked')
       $recentActionCpu.text('The Enemy Missed')
-      setTimeout(function(){
-        userTurn()
-      }, 700)
+      setTimeout(() => userTurn(), 700)
     } else{
       $shipSquares.eq(cpuTarget).removeClass()
       $shipSquares.eq(cpuTarget).addClass('hit')
       $recentActionCpu.text('The Enemy Hit Your Ship!')
       userSquaresHit.push(cpuTarget)
       recentlyHit = cpuTarget
-      ships.forEach(obj => {
-        if((obj.index.every(index => userSquaresHit.includes(index))) &&
-        (obj.sunk === false)){
-          $recentActionCpu.text(`The enemy has sunk your ${obj.name}`)
-          obj.sunk = true
-          recentlyHit = undefined
-        }
-      })
-      userSquaresHit.length === 17 ? alert('You lose!') : setTimeout(function(){
-        userTurn()
-      }, 700)
+      checkForSunk(ships, userSquaresHit, $recentActionCpu, true)
+      userSquaresHit.length === 17 ? alert('You lose!') : setTimeout(() => userTurn(), 700)
     }
   }
 
   $resetBtn.on('click', resetGame)
 
-  function resetIndices(){
-    ships[0].index = [4,3,2,1,0]
-    ships[1].index = [3,2,1,0]
-    ships[2].index = [2,1,0]
-    ships[3].index = [2,1,0]
-    ships[4].index = [1,0]
-  }
-
   // to reset the game to start
   function resetGame(e){
-    resetIndices()
+    // resetIndices()
     $shipSquares.removeClass()
     $fireSquares.removeClass()
     ships.forEach(ship => ship.sunk = false)
@@ -363,22 +334,29 @@ $(() => {
     play()
   }
 
+  // check if ship is sunk- if so update the ship object and display to player
+  function checkForSunk(array, squaresHit, player, boolean){
+    array.forEach(obj => {
+      if((obj.index.every(index => squaresHit.includes(index))) &&
+      (obj.sunk === false)){
+        player.text(`${obj.name} was sunk`)
+        obj.sunk = true
+        if(boolean){
+          recentlyHit = undefined
+        }
+      }
+    })
+  }
+
   //                                      TURN MANAGEMENT
   //----------------------------------------------------------------------------------------------------------
-  // user's turn, update for previous opponent turn and user aims to attack
   function userTurn(){
-    // updateCpuScore()
     aim()
   }
-
-  // cpu turn, update score of user after his/her turn and cpu attacks
   function cpuTurn(){
-    // updateUserScore()
     cpuFire()
   }
-
-
-  // starting the game
+  //start the game
   function play(){
     placeCpuShips()
     placeUserShips(0)
