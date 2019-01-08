@@ -134,26 +134,26 @@ $(() => {
     $(document).off()
     // choosing ship to begin placing
     const ship = ships[i].index
-    ship.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('ship userShip'))
+    ship.forEach(ship => $shipSquares.eq(ship).addClass(`ship ${ships[i].name}`))
     // figure out which way user wants to move ship, and if it's possible
     $(document).on('keydown', e =>{
       switch(e.keyCode){
         case 37: if(ship[ship.length-1] % width > ship.length-1 ||
                   (isVertical(ship) && (ship[0] % width > 0))){
-          moveShip(ship, 'left')
+          moveShip(ship, i, 'left')
         }
           break
-        case 38: if(ship[0] - width >= 0) moveShip(ship, 'up')
+        case 38: if(ship[0] - width >= 0) moveShip(ship, i, 'up')
           break
         case 39: if(ship[0] % width < width-[ship.length] ||
                 (isVertical(ship) && (ship[0] % width < width-1))){
-          moveShip(ship, 'right')
+          moveShip(ship, i, 'right')
         }
           break
-        case 40: if(ship[ship.length-1]+ width < width*width) moveShip(ship, 'down')
+        case 40: if(ship[ship.length-1]+ width < width*width) moveShip(ship, i, 'down')
           break
-        case 16: if((!isVertical(ship)) && (ship[ship.length-1]+ width < width*width)) rotateShipVertical(ship)
-          if((isVertical(ship)) && (ship[0] % width < width-[ship.length-1]) )rotateShipHorizontal(ship)
+        case 16: if((!isVertical(ship)) && (ship[ship.length-1]+ width < width*width)) rotateShipVertical(ship, i)
+          if((isVertical(ship)) && (ship[0] % width < width-[ship.length-1]) )rotateShipHorizontal(ship, i)
           break
         case 13: if((i < 4) && (!(selectedSpaces.some(index => ship.includes(index))))){
           i++
@@ -181,23 +181,23 @@ $(() => {
   }
 
   // rotate horizontally
-  function rotateShipHorizontal(ship){
+  function rotateShipHorizontal(ship ,i){
     const startingIndex = ship[0]
     const horzShip = []
     for(let i =0; i< ship.length; i++){
       horzShip.push(startingIndex + i)
     }
     horzShip.forEach(index => {
-      ship.forEach(shipIndex => $shipSquares.eq(shipIndex).removeClass('ship userShip'))
+      ship.forEach(shipIndex => $shipSquares.eq(shipIndex).removeClass(`ship ${ships[i].name}`))
       ship.unshift(index)
       ship.pop()
-      ship.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('ship userShip'))
+      ship.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass(`ship ${ships[i].name}`))
     })
     return ship.sort((a,b) => b-a)
   }
 
   // rotate the ship vertically
-  function rotateShipVertical(ship){
+  function rotateShipVertical(ship, i){
     const startingIndex = ship[0]
     const shipLength = ship.length
     const verticalShip = []
@@ -207,25 +207,25 @@ $(() => {
       m+= 10
     }
     verticalShip.forEach(index => {
-      ship.forEach(shipIndex => $shipSquares.eq(shipIndex).removeClass('ship userShip'))
+      ship.forEach(shipIndex => $shipSquares.eq(shipIndex).removeClass(`ship ${ships[i].name}`))
       ship.unshift(index)
       ship.pop()
-      ship.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('ship userShip'))
+      ship.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass(`ship ${ships[i].name}`))
     })
     return ship.sort((a,b) => b-a)
   }
 
 
   // move the ship
-  function moveShip(ship, direction){
+  function moveShip(ship,i, direction){
     const nextIndex = getNextIndex(ship, direction).sort((a,b) => b-a)
     nextIndex.forEach(index => {
-      ship.forEach(shipIndex => $shipSquares.eq(shipIndex).removeClass('ship userShip'))
+      ship.forEach(shipIndex => $shipSquares.eq(shipIndex).removeClass(`ship ${ships[i].name}`))
       ship.unshift(index)
       ship.pop()
-      ship.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('ship userShip'))
+      ship.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass(`ship ${ships[i].name}`))
     })
-    selectedSpaces.forEach(selectedSpace => $shipSquares.eq(selectedSpace).addClass('ship userShip'))
+    selectedSpaces.forEach(selectedSpace => $shipSquares.eq(selectedSpace).addClass('ship'))
     return ship
   }
 
