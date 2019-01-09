@@ -1,11 +1,8 @@
 'use strict'
-
 $(() => {
-
   const $shipGrid = $('.ship-grid')
   const $fireGrid = $('.fire-grid')
-  const $recentActionUser = $('#recent-action-user')
-  const $recentActionCpu = $('#recent-action-cpu')
+  const $recentAction = $('#recent-action')
   const $resetBtn = $('.reset')
   const $gameBoard = $('.game-board')
   const $startBtn = $('.start-button')
@@ -242,19 +239,19 @@ $(() => {
   function fire(){
     if($fireSquares.eq(fireIndex).hasClass('hit') ||
       $fireSquares.eq(fireIndex).hasClass('attacked')){
-      $recentActionUser.text('you already hit here,try again')
+      $recentAction.text('You already hit here,try again')
     } else if(!$fireSquares.eq(fireIndex).hasClass('ship')){
       $(document).off()
-      $recentActionUser.text('You missed!')
+      updateText('missed', fireIndex, 'You')
       $fireSquares.eq(fireIndex).addClass('attacked')
       setTimeout(() => cpuTurn(), 700)
     } else{
       $(document).off()
       $fireSquares.eq(fireIndex).removeClass()
       $fireSquares.eq(fireIndex).addClass('hit')
-      $recentActionUser.text('You hit an Enemy Ship!')
+      updateText('hit', fireIndex, 'You')
       cpuSquaresHit.push(fireIndex)
-      checkForSunk(cpuShips, cpuSquaresHit, $recentActionUser)
+      checkForSunk(cpuShips, cpuSquaresHit, $recentAction)
       cpuSquaresHit.length === 17 ? alert('you win') : setTimeout(() => cpuTurn(), 700)
     }
 
@@ -320,17 +317,17 @@ $(() => {
       return cpuFire()
     } else if(!$shipSquares.eq(cpuTarget).hasClass('ship')){
       $shipSquares.eq(cpuTarget).addClass('attacked')
-      $recentActionCpu.text('The Enemy Missed')
+      updateText('missed', cpuTarget, 'cpu')
       userSquaresAttacked.push(cpuTarget)
       setTimeout(() => userTurn(), 700)
     } else{
       $shipSquares.eq(cpuTarget).removeClass()
       $shipSquares.eq(cpuTarget).addClass('hit')
-      $recentActionCpu.text('The Enemy Hit Your Ship!')
+      updateText('hit', cpuTarget, 'cpu' )
       userSquaresHit.push(cpuTarget)
       userSquaresAttacked.push(cpuTarget)
       recentlyHit = cpuTarget
-      checkForSunk(ships, userSquaresHit, $recentActionCpu, true)
+      checkForSunk(ships, userSquaresHit, $recentAction, true)
       userSquaresHit.length === 17 ? alert('you lose!') : setTimeout(() => userTurn(), 700)
     }
   }
@@ -367,6 +364,15 @@ $(() => {
         }
       }
     })
+  }
+
+  function updateText(result, index, attacker){
+    const space = coordinates[index]
+    if(attacker === 'cpu'){
+      $recentAction.text(`The Enemy ${result} on ${space}!`)
+    } else {
+      $recentAction.text(`You ${result} on ${space}!`)
+    }
   }
 
   //                                      TURN MANAGEMENT
