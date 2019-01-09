@@ -9,50 +9,9 @@ $(() => {
   const $startBtn = $('.start-button')
   const $boardDisplay = $('.board-display')
   let recentlyHit
+  let recentHits = []
   const width = 10
-  const ships =[
-    {
-      name: 'carrier',
-      index: [4,3,2,1,0],
-      sunk: false
-    },{
-      name: 'battleship',
-      index: [3,2,1,0],
-      sunk: false
-    },{
-      name: 'destroyer',
-      index: [2,1,0],
-      sunk: false
-    },{
-      name: 'submarine',
-      index: [2,1,0],
-      sunk: false
-    },{
-      name: 'patrolboat',
-      index: [1,0],
-      sunk: false
-    }
-  ]
 
-  const cpuShips = [
-    {
-      name: 'Enemy Battleship',
-      sunk: false
-    },{
-      name: 'Enemy Patrol Boat',
-      sunk: false
-    },{
-      name: 'Enemy Submarine',
-      sunk: false
-    },{
-      name: 'Enemy Carrier',
-      sunk: false
-    },{
-      name: 'Enemy Destroyer',
-      sunk: false
-    }
-
-  ]
 
   let takenIndexes = []
   let selectedSpaces = []
@@ -174,6 +133,7 @@ $(() => {
           placeUserShips(i)
         } else if((i === 4) && (!(selectedSpaces.some(index => ship.includes(index))))){
           ship.forEach(ship => $shipSquares.eq(ship).removeClass('pulse'))
+          $recentAction.text('Find Your Opponent\'s Ships!')
           styleShips()
           userTurn()
         }
@@ -332,6 +292,7 @@ $(() => {
       userSquaresHit.push(cpuTarget)
       userSquaresAttacked.push(cpuTarget)
       recentlyHit = cpuTarget
+      recentHits.push(recentlyHit)
       checkForSunk(ships, userSquaresHit, $recentAction, true)
       userSquaresHit.length === 17 ? alert('you lose!') : setTimeout(() => userTurn(), 700)
     }
@@ -352,6 +313,8 @@ $(() => {
     cpuSquaresHit = []
     userSquaresHit = []
     userSquaresAttacked = []
+    recentlyHit = undefined
+    recentHits = []
     console.log(e.target)
     e.target.blur()
     play()
@@ -362,10 +325,16 @@ $(() => {
     array.forEach(obj => {
       if((obj.index.every(index => squaresHit.includes(index))) &&
       (obj.sunk === false)){
-        player.text(`${obj.name} was sunk`)
+        player.text(`Your ${obj.name} was sunk`)
         obj.sunk = true
         if(boolean){
+          recentHits.forEach(index => {
+            player.text(`${obj.name} was sunk`)
+            $shipSquares.eq(index).removeClass()
+            $shipSquares.eq(index).addClass('dead')
+          })
           recentlyHit = undefined
+          recentHits = []
         }
       }
     })
