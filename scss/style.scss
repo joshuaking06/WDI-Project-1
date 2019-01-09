@@ -55,46 +55,6 @@ body{
     justify-content: space-between;
     background-color: #800000;
     flex-wrap: wrap;
-    .xcoord{
-      text-align: center;
-      display: flex;
-      width: 50%;
-      color: white;
-      font-size: 15px;
-      p{
-        align-content: flex-start;
-        width: 7%;
-        display: inline;
-      }
-    }
-    .x1{
-      align-self: flex-start;
-      :first-child{
-        margin-left: 45px;
-      }
-    }
-    .x2{
-      :first-child{
-        margin-left: 195px;
-      }
-    }
-    .ycoord{
-      height: 500px;
-      color: white;
-      font-size: 15px;
-      p{
-        height: 7%;
-        padding: 0;
-        margin-bottom: none;
-      }
-    }
-    .ship-grid{
-      margin-left: -250px
-    }
-    .fire-grid{
-      align-self: flex-end;
-      margin-left: -240px;
-    }
     .ship-tracker{
       h4{
         margin-bottom: none;
@@ -175,6 +135,16 @@ body{
   .pulse{
     animation: pulse 2.0s infinite
   }
+}
+
+.coordinates{
+  color: lightblue;
+  font-size: 13px;
+  display: flex;
+  justify-content: right;
+  align-items: flex-end;
+  padding-left: 2px;
+  padding-bottom: 2px;
 }
 
 @keyframes pulse{

@@ -37,6 +37,30 @@ $(() => {
   const $fireSquares = $fireGrid.find('div')
   const $shipSquares = $shipGrid.find('div')
 
+  for(var i = 0; i<$fireSquares.length; i++){
+    $fireGrid.find('div')[i].textContent = `${coordinates[i]}`
+    $shipGrid.find('div')[i].textContent = `${coordinates[i]}`
+  }
+
+  function addCoordinates(){
+    for(var i = 0; i<$fireSquares.length; i++){
+      $fireSquares.eq(i).addClass('coordinates')
+      $shipSquares.eq(i).addClass('coordinates')
+    }
+  }
+
+
+
+  // const $textsFireGrid = $('.fire-grid div')
+  // for(var i =0; i<$textsFireGrid.length; i++){
+  //   $textsFireGrid[i].text('hello')
+  // }
+
+
+  // $shipSquares.forEach(square, index => {
+  //   square.text(`${coordinates[index]}`)
+  // })
+
 
 
   //                                                   CPU SHIP PLACEMENT
@@ -85,6 +109,7 @@ $(() => {
       shipArray.pop()
       shipArray.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass(`ship ${ships[i].name}`))
       shipArray.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('pulse'))
+      addCoordinates()
     })
   }
 
@@ -112,6 +137,7 @@ $(() => {
     $(document).off()
     // choosing ship to begin placing
     const ship = ships[i].index
+    addCoordinates()
     ship.forEach(ship => $shipSquares.eq(ship).addClass(`ship ${ships[i].name}`))
     ship.forEach(ship => $shipSquares.eq(ship).addClass('pulse'))
     // figure out which way user wants to move ship, and if it's possible
@@ -142,6 +168,7 @@ $(() => {
         } else if((i === 4) && (!(selectedSpaces.some(index => ship.includes(index))))){
           ship.forEach(ship => $shipSquares.eq(ship).removeClass('pulse'))
           $recentAction.text('Find Your Opponent\'s Ships! Press Enter to Fire')
+          addCoordinates()
           styleShips()
           userTurn()
         }
@@ -266,7 +293,6 @@ $(() => {
 
   // function for cpu intelligent attacks based on previous checks
   function smartAttack(){
-    console.log(!!originalHit , 'now i show recentHits array', recentHits)
     if(!(recentHits)) return undefined
     let possibleOption
     const basicOptions = [1,-1,+10, -10]
@@ -276,7 +302,6 @@ $(() => {
     if(recentHits.length > 1 &&  ((recentHits[0] -recentHits[1] === 10) || (recentHits)[1]-recentHits[0] ===10)){
       for(var i = 0; i<vertOptions.length; i++){
         possibleOption = originalHit + vertOptions[i]
-        console.log(possibleOption , 'my possible options')
         if((!(userSquaresAttacked.includes(possibleOption))) &&
           possibleOption>0 && possibleOption<100) return possibleOption
       }
@@ -285,7 +310,6 @@ $(() => {
     if(recentHits.length > 1 &&  ((recentHits[0] -recentHits[1] === 1) || (recentHits)[1]-recentHits[0] ===1)){
       for(var j = 0; j<sideOptions.length; j++){
         possibleOption = originalHit + sideOptions[j]
-        console.log(possibleOption)
         if((!(userSquaresAttacked.includes(possibleOption))) &&
         possibleOption>0 && possibleOption<100) return possibleOption
       }
@@ -340,6 +364,7 @@ $(() => {
     userShipsDestroyed = 0
     $shipSquares.removeClass()
     $fireSquares.removeClass()
+    addCoordinates()
     ships.forEach(ship => ship.sunk = false)
     cpuShips.forEach(ship => ship.sunk = false)
     takenIndexes = []
