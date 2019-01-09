@@ -5,7 +5,9 @@ $(() => {
   const $recentAction = $('#recent-action')
   const $resetBtn = $('.reset')
   const $gameBoard = $('.game-board')
+  const $startScreen = $('.start-screen')
   const $startBtn = $('.start-button')
+  const $boardDisplay = $('.board-display')
   let recentlyHit
   const width = 10
   const ships =[
@@ -385,14 +387,19 @@ $(() => {
   }
   //start the game
   function play(){
-    $startBtn.hide()
+    $resetBtn.show()
+    $startScreen.hide()
+    $boardDisplay.show()
     $gameBoard.show()
     placeCpuShips()
     placeUserShips(0)
   }
 
   function init(){
+    $resetBtn.hide()
+    $boardDisplay.hide()
     $gameBoard.hide()
+    $startScreen.show()
     $startBtn.on('click', play)
   }
 

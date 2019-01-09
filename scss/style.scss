@@ -4,10 +4,17 @@
 
 body{
   width: 80%;
-  margin: 10% auto;
-  background-image: url(../assets/ocean-background.jpg);
-  background-repeat: no-repeat;
+  margin: 5% auto;
   background-size: cover;
+  background-color: #800000;
+  .start-screen{
+    width: 100%;
+    img{
+      display: block;
+      width: 100%;
+      height: 700px;
+    }
+  }
   .board-display{
     h2{
       color:white;
@@ -18,9 +25,10 @@ body{
   .game-board{
     display: flex;
     justify-content: space-between;
+    background-color: #800000;
     .grid{
-      background-color: lightblue;
-      opacity: 0.5;
+      background-color: black;
+      opacity: 0.8;
       border: 1px solid white;
       height: 500px;
       width: 500px;
@@ -53,7 +61,7 @@ body{
         background-color: green;
       }
       .patrolboat{
-        background-color: black;
+        background-color: red;
       }
       .submarine{
         background-color: orange;
