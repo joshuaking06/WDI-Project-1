@@ -12,7 +12,7 @@ $(() => {
   const $newGameBtn = $('.new-game-btn')
   const $endScreen = $('.end-screen')
   const $result = $('.result')
-  let recentlyHit
+  let originalHit
   let recentHits = []
   let userShipsDestroyed = 0
   let cpuShipsDestroyed = 0
@@ -237,7 +237,7 @@ $(() => {
       cpuSquaresHit.push(fireIndex)
       cpuSquaresAttacked.push(fireIndex)
       checkForSunk(cpuShips, cpuSquaresHit, $recentAction)
-      cpuSquaresHit.length === 5 ? endGame('won!') : setTimeout(() => cpuTurn(), 700)
+      cpuSquaresHit.length === 17 ? endGame('won!') : setTimeout(() => cpuTurn(), 700)
     }
 
   }
@@ -266,37 +266,46 @@ $(() => {
 
   // function for cpu intelligent attacks based on previous checks
   function smartAttack(){
-    if(!recentlyHit) return undefined
-    if((!(userSquaresAttacked.includes(recentlyHit+1)))) return recentlyHit+1
-    if((!(userSquaresAttacked.includes(recentlyHit-1)))) return recentlyHit-1
+    console.log(!!originalHit , 'now i show recentHits array', recentHits)
+    if(!(recentHits)) return undefined
+    let possibleOption
+    const basicOptions = [1,-1,+10, -10]
+    const vertOptions = [+10, -10, +20, -20, +30, -30, +40, -40]
+    const sideOptions = [+1, -1, +2, -2, +3, -3, +4, -4, +5, -5]
 
-    if((!(userSquaresAttacked.includes(recentlyHit-1))) &&
-    (!(userSquaresAttacked.includes(recentlyHit+1))) &&
-    (!(userSquaresAttacked.includes(recentlyHit-2)))) return recentlyHit-2
+    if(recentHits.length > 1 &&  ((recentHits[0] -recentHits[1] === 10) || (recentHits)[1]-recentHits[0] ===10)){
+      for(var i = 0; i<vertOptions.length; i++){
+        possibleOption = originalHit + vertOptions[i]
+        console.log(possibleOption , 'my possible options')
+        if((!(userSquaresAttacked.includes(possibleOption))) &&
+          possibleOption>0 && possibleOption<100) return possibleOption
+      }
+    }
 
-    if((!(userSquaresAttacked.includes(recentlyHit+width)))) return recentlyHit+width
-    if((!(userSquaresAttacked.includes(recentlyHit-width)))) return recentlyHit-width
-    if((!(userSquaresAttacked.includes(recentlyHit+width*2)))) return recentlyHit+width*2
-    if((!(userSquaresAttacked.includes(recentlyHit-width*2)))) return recentlyHit-width*2
+    if(recentHits.length > 1 &&  ((recentHits[0] -recentHits[1] === 1) || (recentHits)[1]-recentHits[0] ===1)){
+      for(var j = 0; j<sideOptions.length; j++){
+        possibleOption = originalHit + sideOptions[j]
+        console.log(possibleOption)
+        if((!(userSquaresAttacked.includes(possibleOption))) &&
+        possibleOption>0 && possibleOption<100) return possibleOption
+      }
+    }
 
-
-    if((!(userSquaresAttacked.includes(recentlyHit-1))) &&
-    (!(userSquaresAttacked.includes(recentlyHit+1))) &&
-    (!(userSquaresAttacked.includes(recentlyHit-2)))&&
-    (!(userSquaresAttacked.includes(recentlyHit-3)))) return recentlyHit-3
-
-    if((!(userSquaresAttacked.includes(recentlyHit-1))) &&
-      (!(userSquaresAttacked.includes(recentlyHit-2))) &&
-      (!(userSquaresAttacked.includes(recentlyHit+1)))&&
-      (!(userSquaresAttacked.includes(recentlyHit-4)))) return recentlyHit-4
+    if((!(userSquaresAttacked.includes(originalHit+basicOptions[0])))) return originalHit+basicOptions[0]
+    if((!(userSquaresAttacked.includes(originalHit+basicOptions[1])))) return originalHit+basicOptions[1]
+    if((!(userSquaresAttacked.includes(originalHit+basicOptions[2])))) return originalHit+basicOptions[2]
+    if((!(userSquaresAttacked.includes(originalHit+basicOptions[3])))) return originalHit+basicOptions[3]
   }
+
+
+
+
 
 
   // cpu attack function
   function cpuFire(){
     const cpuTarget = smartAttack() || (Math.floor(Math.random() * 99) + 0)
-    console.log(userSquaresAttacked)
-    console.log(cpuTarget)
+    console.log(cpuTarget, 'what the cpu attacked')
     if($shipSquares.eq(cpuTarget).hasClass('hit') ||
       $shipSquares.eq(cpuTarget).hasClass('attacked')){
       return cpuFire()
@@ -311,10 +320,14 @@ $(() => {
       updateText('hit', cpuTarget, 'cpu' )
       userSquaresHit.push(cpuTarget)
       userSquaresAttacked.push(cpuTarget)
-      recentlyHit = cpuTarget
-      recentHits.push(recentlyHit)
+      recentHits.unshift(cpuTarget)
+      recentHits = recentHits.sort((a, b) => b-a)
+      if(recentHits.length === 1){
+        originalHit = cpuTarget
+      }
+      console.log('recent hits array just made', recentHits)
       checkForSunk(ships, userSquaresHit, $recentAction, true)
-      userSquaresHit.length === 5 ? endGame('lose.') : setTimeout(() => userTurn(), 700)
+      userSquaresHit.length === 17 ? endGame('lose.') : setTimeout(() => userTurn(), 700)
     }
   }
 
@@ -336,7 +349,7 @@ $(() => {
     cpuSquaresAttacked = []
     userSquaresHit = []
     userSquaresAttacked = []
-    recentlyHit = undefined
+    originalHit = undefined
     recentHits = []
     e.target.blur()
     play()
@@ -364,7 +377,7 @@ $(() => {
             $shipSquares.eq(index).addClass('dead')
           })
           userShipsDestroyed ++
-          recentlyHit = undefined
+          originalHit = undefined
           recentHits = []
         }
       }
