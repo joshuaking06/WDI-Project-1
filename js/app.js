@@ -140,6 +140,16 @@ $(() => {
       }
     })
   }
+
+  function stopScroll(){
+    window.addEventListener("keydown", function(e) {
+      // space and arrow keys
+      if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+        e.preventDefault();
+      }
+    }, false);
+  }
+
   // color the ships
   function styleShips(){
     ships.forEach(obj => {
@@ -325,11 +335,17 @@ $(() => {
     array.forEach(obj => {
       if((obj.index.every(index => squaresHit.includes(index))) &&
       (obj.sunk === false)){
-        player.text(`Your ${obj.name} was sunk`)
+        player.text(`${obj.name} was sunk`)
+        if(!boolean){
+          obj.index.forEach(index => {
+            $fireSquares.eq(index).removeClass()
+            $fireSquares.eq(index).addClass('dead')
+          })
+        }
         obj.sunk = true
         if(boolean){
           recentHits.forEach(index => {
-            player.text(`${obj.name} was sunk`)
+            player.text(`Your ${obj.name} was sunk`)
             $shipSquares.eq(index).removeClass()
             $shipSquares.eq(index).addClass('dead')
           })
@@ -359,6 +375,7 @@ $(() => {
   }
   //start the game
   function play(){
+    stopScroll()
     $resetBtn.show()
     $startScreen.hide()
     $boardDisplay.show()
