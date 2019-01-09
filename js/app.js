@@ -274,7 +274,15 @@ $(() => {
   function aim(){
     $fireSquares.eq(fireIndex).addClass('firing')
     $(document).off()
-    $(document).on('keydown', e => {
+    $fireSquares.on('click', e => {
+      $fireSquares.eq(fireIndex).removeClass('firing')
+      console.log($fireSquares.index(e.target))
+      fireIndex = $fireSquares.index(e.target)
+      $fireSquares.eq(fireIndex).addClass('firing')
+      $fireSquares.off()
+      fire()
+    })
+    $(document).on('keydown click', e => {
       $fireSquares.eq(fireIndex).removeClass('firing')
       switch(e.keyCode) {
         case 37: if(fireIndex % width > 0)fireIndex--
@@ -303,7 +311,7 @@ $(() => {
       for(var i = 0; i<vertOptions.length; i++){
         possibleOption = originalHit + vertOptions[i]
         if((!(userSquaresAttacked.includes(possibleOption))) &&
-          possibleOption>0 && possibleOption<100) return possibleOption
+          possibleOption>=0 && possibleOption<100) return possibleOption
       }
     }
 
@@ -311,7 +319,7 @@ $(() => {
       for(var j = 0; j<sideOptions.length; j++){
         possibleOption = originalHit + sideOptions[j]
         if((!(userSquaresAttacked.includes(possibleOption))) &&
-        possibleOption>0 && possibleOption<100) return possibleOption
+        possibleOption>=0 && possibleOption<100) return possibleOption
       }
     }
 
