@@ -114,9 +114,11 @@ $(() => {
   function updateShipArray(baseArray, shipArray, i){
     baseArray.forEach(index => {
       shipArray.forEach(shipIndex => $shipSquares.eq(shipIndex).removeClass(`ship ${ships[i].name}`))
+      shipArray.forEach(shipIndex => $shipSquares.eq(shipIndex).removeClass('pulse'))
       shipArray.unshift(index)
       shipArray.pop()
       shipArray.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass(`ship ${ships[i].name}`))
+      shipArray.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('pulse'))
     })
   }
 
@@ -144,6 +146,7 @@ $(() => {
     // choosing ship to begin placing
     const ship = ships[i].index
     ship.forEach(ship => $shipSquares.eq(ship).addClass(`ship ${ships[i].name}`))
+    ship.forEach(ship => $shipSquares.eq(ship).addClass('pulse'))
     // figure out which way user wants to move ship, and if it's possible
     $(document).on('keydown', e =>{
       switch(e.keyCode){
@@ -166,11 +169,11 @@ $(() => {
           break
         case 13: if((i < 4) && (!(selectedSpaces.some(index => ship.includes(index))))){
           i++
-          console.log(i , 'i')
-          console.log(selectedSpaces, 'selected space' )
+          ship.forEach(ship => $shipSquares.eq(ship).removeClass('pulse'))
           selectedSpaces.push(...ship)
           placeUserShips(i)
         } else if((i === 4) && (!(selectedSpaces.some(index => ship.includes(index))))){
+          ship.forEach(ship => $shipSquares.eq(ship).removeClass('pulse'))
           styleShips()
           userTurn()
         }
