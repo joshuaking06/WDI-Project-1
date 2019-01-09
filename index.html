@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <title>Project 1</title>
-    <script src="./js/data.js" charset="utf-8"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="./js/data.js" charset="utf-8"></script>
     <script src="./js/app.js" charset="utf-8"></script>
     <link rel="stylesheet" href="./css/style.css">
   </head>
@@ -14,6 +14,9 @@
       <button type="button" name="button" class="start-button">Start Game</button>
     </div>
     <div class="board-display">
+      <div>
+        <button type="button" name="button" class="reset">Reset Game</button>
+      </div>
       <h1 id="recent-action">Place your ships! Use The Arrow Keys to Move. </br> Press Shift to Rotate & Enter to Place Ships.</h1>
     </div>
     <div class="game-board">
@@ -58,6 +61,8 @@
 
       <div class="grid ship-grid"></div>
 
+
+
       <div class="ycoord y2">
         <p>A</p>
         <p>B</p>
@@ -72,10 +77,34 @@
       </div>
 
       <div class="grid fire-grid"></div>
+
+
+      <div class="ship-tracker">
+        <div class="user-ship-display">
+          <h4>Your Ships:</h4>
+          <div class="user-ship-list">
+            <p>Aircraft Carrier </br>⚫️ ⚫️ ⚫️ ⚫️ ⚫️ </p>
+            <p>Battleship </br>⚫️ ⚫️ ⚫️ ⚫️ </p>
+            <p>Destroyer </br>⚫️ ⚫️ ⚫️ </p>
+            <p>Submarine </br>⚫️ ⚫️ ⚫️ </p>
+            <p>PatrolBoat </br>⚫️ ⚫️ </p>
+          </div>
+        </div>
+
+        <div class="cpu-ship-display">
+          <h4>Your Opponents Ships:</h4>
+          <div class="cpu-ship-list">
+            <p>AirCraft Carrier </br>⚫️ ⚫️ ⚫️ ⚫️ ⚫️ </p>
+            <p>BattleShip </br>⚫️ ⚫️ ⚫️ ⚫️ </p>
+            <p>Destroyer </br>⚫️ ⚫️ ⚫️ </p>
+            <p>Submarine </br>⚫️ ⚫️ ⚫️ </p>
+            <p>Patrol Boat </br>⚫️ ⚫️ </p>
+          </div>
+
+        </div>
+      </div>
     </div>
-    <div>
-      <button type="button" name="button" class="reset">Reset Game</button>
-    </div>
+
 
 
 
