@@ -1,4 +1,5 @@
 'use strict'
+
 $(() => {
   const $shipGrid = $('.ship-grid')
   const $fireGrid = $('.fire-grid')
@@ -99,6 +100,7 @@ $(() => {
   }
   //                                                    USER SHIP PLACEMENT
   // ------------------------------------------------------------------------------------------------------------------
+
   // allow user to place where ships are
   function placeUserShips(i){
     $(document).off()
@@ -133,7 +135,7 @@ $(() => {
           placeUserShips(i)
         } else if((i === 4) && (!(selectedSpaces.some(index => ship.includes(index))))){
           ship.forEach(ship => $shipSquares.eq(ship).removeClass('pulse'))
-          $recentAction.text('Find Your Opponent\'s Ships!')
+          $recentAction.text('Find Your Opponent\'s Ships! Press Enter to Fire')
           styleShips()
           userTurn()
         }
@@ -142,12 +144,12 @@ $(() => {
   }
 
   function stopScroll(){
-    window.addEventListener("keydown", function(e) {
+    window.addEventListener('keydown', function(e) {
       // space and arrow keys
       if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
-        e.preventDefault();
+        e.preventDefault()
       }
-    }, false);
+    }, false)
   }
 
   // color the ships
@@ -343,6 +345,7 @@ $(() => {
           })
         }
         obj.sunk = true
+        // changeDisplay(obj)
         if(boolean){
           recentHits.forEach(index => {
             player.text(`Your ${obj.name} was sunk`)
@@ -355,6 +358,8 @@ $(() => {
       }
     })
   }
+
+
 
   function updateText(result, index, attacker){
     const space = coordinates[index]
@@ -393,5 +398,4 @@ $(() => {
   }
 
   init()
-
 })

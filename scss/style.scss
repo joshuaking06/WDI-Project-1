@@ -4,7 +4,7 @@
 
 body{
   width: 95%;
-  margin: 5% auto;
+  margin: 2% auto;
   background-size: cover;
   background-color: #800000;
   .start-screen{
@@ -29,12 +29,26 @@ body{
   }
 
   .board-display{
+    text-align: center;
+    margin-bottom: 3%;
     h1{
       color:white;
       text-align: center;
+      display: inline;
+      margin: auto;
     }
-    display: flex;
-    justify-content: center;
+    button{
+      text-align: center;
+      color: darkblue;
+      font-weight: 700;
+      height: 50px;
+      width: 300px;
+      margin-top: -30px;
+      margin-bottom: 20px;
+      font-size: 20px;
+      font-family: sans-serif;
+      border-radius: 10px;
+    }
   }
   .game-board{
     display: flex;
@@ -81,16 +95,43 @@ body{
       align-self: flex-end;
       margin-left: -240px;
     }
+    .ship-tracker{
+      h4{
+        margin-bottom: none;
+      }
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      color:white;
+      font-size: 16px;
+      div{
+        text-align: center;
+      }
+      div div{
+        display: flex;
+        justify-content: space-around;
+        p{
+          padding: 5px;
+          border-right: 1px solid white;
+        }
+        :last-child{
+          border: none;
+        }
+      }
+    }
     .grid{
-      background-color: black;
+      background-color: lightblue;
+      border-radius: 10px;
       opacity: 0.8;
-      border: 1px solid white;
       height: 500px;
       width: 500px;
       display: flex;
       flex-wrap: wrap;
       div{
-        border: 1px solid white;
+        border: 1px solid lightblue;
+        background-color: black;
+        opacity: 0.8;
+        border-radius: 15px;
         height: 10%;
         width: 10%;
         opacity: 1;
@@ -108,14 +149,14 @@ body{
         background-size: cover;
       }
       .attacked{
-        background-color: grey;
+        background-color: lightblue;
       }
       .firing{
         background-color: yellow;
         animation: pulse 1.5s infinite;
       }
       .battleship{
-        background-color: blue;
+        background-color: purple;
       }
       .carrier{
         background-color: green;
@@ -127,7 +168,7 @@ body{
         background-color: orange;
       }
       .destroyer{
-        background-color: darkblue;
+        background-color: brown;
       }
     }
   }
@@ -138,6 +179,6 @@ body{
 
 @keyframes pulse{
   0%{opacity: 1}
-  50% {opacity: .25}
+  50% {opacity: .3}
   100%{opacity: 1}
 }
