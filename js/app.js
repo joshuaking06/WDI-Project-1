@@ -325,11 +325,17 @@ $(() => {
     array.forEach(obj => {
       if((obj.index.every(index => squaresHit.includes(index))) &&
       (obj.sunk === false)){
-        player.text(`Your ${obj.name} was sunk`)
+        player.text(`${obj.name} was sunk`)
+        if(!boolean){
+          obj.index.forEach(index => {
+            $fireSquares.eq(index).removeClass()
+            $fireSquares.eq(index).addClass('dead')
+          })
+        }
         obj.sunk = true
         if(boolean){
           recentHits.forEach(index => {
-            player.text(`${obj.name} was sunk`)
+            player.text(`Your ${obj.name} was sunk`)
             $shipSquares.eq(index).removeClass()
             $shipSquares.eq(index).addClass('dead')
           })
