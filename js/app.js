@@ -9,8 +9,13 @@ $(() => {
   const $startScreen = $('.start-screen')
   const $startBtn = $('.start-button')
   const $boardDisplay = $('.board-display')
+  const $newGameBtn = $('.new-game-btn')
+  const $endScreen = $('.end-screen')
+  const $result = $('.result')
   let recentlyHit
   let recentHits = []
+  let userShipsDestroyed = 0
+  let cpuShipsDestroyed = 0
   const width = 10
 
 
@@ -18,6 +23,7 @@ $(() => {
   let selectedSpaces = []
   let fireIndex = 0
   let cpuSquaresHit = []
+  let cpuSquaresAttacked = []
   let userSquaresHit = []
   let userSquaresAttacked =[]
 
@@ -221,6 +227,7 @@ $(() => {
       $(document).off()
       updateText('missed', fireIndex, 'You')
       $fireSquares.eq(fireIndex).addClass('attacked')
+      cpuSquaresAttacked.push(fireIndex)
       setTimeout(() => cpuTurn(), 700)
     } else{
       $(document).off()
@@ -228,8 +235,9 @@ $(() => {
       $fireSquares.eq(fireIndex).addClass('hit')
       updateText('hit', fireIndex, 'You')
       cpuSquaresHit.push(fireIndex)
+      cpuSquaresAttacked.push(fireIndex)
       checkForSunk(cpuShips, cpuSquaresHit, $recentAction)
-      cpuSquaresHit.length === 17 ? alert('you win') : setTimeout(() => cpuTurn(), 700)
+      cpuSquaresHit.length === 5 ? endGame('won!') : setTimeout(() => cpuTurn(), 700)
     }
 
   }
@@ -306,7 +314,7 @@ $(() => {
       recentlyHit = cpuTarget
       recentHits.push(recentlyHit)
       checkForSunk(ships, userSquaresHit, $recentAction, true)
-      userSquaresHit.length === 17 ? alert('you lose!') : setTimeout(() => userTurn(), 700)
+      userSquaresHit.length === 5 ? endGame('lose.') : setTimeout(() => userTurn(), 700)
     }
   }
 
@@ -315,6 +323,8 @@ $(() => {
   // to reset the game to start
   function resetGame(e){
     // resetIndices()
+    cpuShipsDestroyed = 0
+    userShipsDestroyed = 0
     $shipSquares.removeClass()
     $fireSquares.removeClass()
     ships.forEach(ship => ship.sunk = false)
@@ -323,11 +333,11 @@ $(() => {
     selectedSpaces = []
     fireIndex = 0
     cpuSquaresHit = []
+    cpuSquaresAttacked = []
     userSquaresHit = []
     userSquaresAttacked = []
     recentlyHit = undefined
     recentHits = []
-    console.log(e.target)
     e.target.blur()
     play()
   }
@@ -343,6 +353,7 @@ $(() => {
             $fireSquares.eq(index).removeClass()
             $fireSquares.eq(index).addClass('dead')
           })
+          cpuShipsDestroyed++
         }
         obj.sunk = true
         // changeDisplay(obj)
@@ -352,6 +363,7 @@ $(() => {
             $shipSquares.eq(index).removeClass()
             $shipSquares.eq(index).addClass('dead')
           })
+          userShipsDestroyed ++
           recentlyHit = undefined
           recentHits = []
         }
@@ -360,6 +372,15 @@ $(() => {
   }
 
 
+  function endGame(result){
+    $gameBoard.hide()
+    $boardDisplay.hide()
+    $endScreen.show()
+    const accuracy = Math.round((cpuSquaresHit.length / cpuSquaresAttacked.length ) * 100)
+    const cpuAccuracy = Math.round((userSquaresHit.length / userSquaresAttacked.length) * 100)
+    $result.text(`You ${result} You had ${cpuSquaresHit.length} hits from ${cpuSquaresAttacked.length}, for an accuracy of ${accuracy}%. Your opponent had ${userSquaresHit.length} hits from ${userSquaresAttacked.length}, for an accuracy of ${cpuAccuracy}%. You destroyed ${cpuShipsDestroyed} ships while your opponent destroyed ${userShipsDestroyed}.`)
+    $newGameBtn.on('click', resetGame)
+  }
 
   function updateText(result, index, attacker){
     const space = coordinates[index]
@@ -381,6 +402,7 @@ $(() => {
   //start the game
   function play(){
     stopScroll()
+    $endScreen.hide()
     $resetBtn.show()
     $startScreen.hide()
     $boardDisplay.show()
@@ -390,6 +412,7 @@ $(() => {
   }
 
   function init(){
+    $endScreen.hide()
     $resetBtn.hide()
     $boardDisplay.hide()
     $gameBoard.hide()
