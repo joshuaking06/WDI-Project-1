@@ -1,3 +1,51 @@
+const ships =[
+  {
+    name: 'carrier',
+    index: [4,3,2,1,0],
+    sunk: false
+  },{
+    name: 'battleship',
+    index: [3,2,1,0],
+    sunk: false
+  },{
+    name: 'destroyer',
+    index: [2,1,0],
+    sunk: false
+  },{
+    name: 'submarine',
+    index: [2,1,0],
+    sunk: false
+  },{
+    name: 'patrolboat',
+    index: [1,0],
+    sunk: false
+  }
+]
+
+const cpuShips = [
+  {
+    name: 'Enemy Battleship',
+    sunk: false
+  },{
+    name: 'Enemy Patrol Boat',
+    sunk: false
+  },{
+    name: 'Enemy Submarine',
+    sunk: false
+  },{
+    name: 'Enemy Carrier',
+    sunk: false
+  },{
+    name: 'Enemy Destroyer',
+    sunk: false
+  }
+
+]
+
+
+
+
+
 const coordinates = {
   0: 'A1',
   1: 'A2',
@@ -69,34 +117,34 @@ const coordinates = {
   67: 'G8',
   68: 'G9',
   69: 'G10',
-  70: 'G1',
-  71: 'G2',
-  72: 'G3',
-  73: 'G4',
-  74: 'G5',
-  75: 'G6',
-  76: 'G7',
-  77: 'G8',
-  78: 'G9',
-  79: 'G10',
-  80: 'H1',
-  81: 'H2',
-  82: 'H3',
-  83: 'H4',
-  84: 'H5',
-  85: 'H6',
-  86: 'H7',
-  87: 'H8',
-  88: 'H9',
-  89: 'H10',
-  90: 'I1',
-  91: 'I2',
-  92: 'I3',
-  93: 'I4',
-  94: 'I5',
-  95: 'I6',
-  96: 'I7',
-  97: 'I8',
-  98: 'I9',
-  99: 'I10'
+  70: 'H1',
+  71: 'H2',
+  72: 'H3',
+  73: 'H4',
+  74: 'H5',
+  75: 'H6',
+  76: 'H7',
+  77: 'H8',
+  78: 'H9',
+  79: 'H10',
+  80: 'I1',
+  81: 'I2',
+  82: 'I3',
+  83: 'I4',
+  84: 'I5',
+  85: 'I6',
+  86: 'I7',
+  87: 'I8',
+  88: 'I9',
+  89: 'I10',
+  90: 'J1',
+  91: 'J2',
+  92: 'J3',
+  93: 'J4',
+  94: 'J5',
+  95: 'J6',
+  96: 'J7',
+  97: 'J8',
+  98: 'J9',
+  99: 'J10'
 }

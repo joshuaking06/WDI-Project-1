@@ -3,7 +3,7 @@
 }
 
 body{
-  width: 80%;
+  width: 95%;
   margin: 5% auto;
   background-size: cover;
   background-color: #800000;
@@ -13,7 +13,8 @@ body{
     text-align: center;
     img{
       display: block;
-      width: 100%;
+      margin: auto;
+      width: 80%;
       height: 600px;
       border-radius: 15px;
     }
@@ -28,7 +29,7 @@ body{
   }
 
   .board-display{
-    h2{
+    h1{
       color:white;
     }
     display: flex;
@@ -38,6 +39,47 @@ body{
     display: flex;
     justify-content: space-between;
     background-color: #800000;
+    flex-wrap: wrap;
+    .xcoord{
+      text-align: center;
+      display: flex;
+      width: 50%;
+      color: white;
+      font-size: 15px;
+      p{
+        align-content: flex-start;
+        width: 7%;
+        display: inline;
+      }
+    }
+    .x1{
+      align-self: flex-start;
+      :first-child{
+        margin-left: 45px;
+      }
+    }
+    .x2{
+      :first-child{
+        margin-left: 195px;
+      }
+    }
+    .ycoord{
+      height: 500px;
+      color: white;
+      font-size: 15px;
+      p{
+        height: 7%;
+        padding: 0;
+        margin-bottom: none;
+      }
+    }
+    .ship-grid{
+      margin-left: -250px
+    }
+    .fire-grid{
+      align-self: flex-end;
+      margin-left: -240px;
+    }
     .grid{
       background-color: black;
       opacity: 0.8;
@@ -58,6 +100,10 @@ body{
       }
       .hit{
         background-image: url(../assets/hit3.png);
+        background-size: cover;
+      }
+      .dead{
+        background-image: url(../assets/blackx.jpg);
         background-size: cover;
       }
       .attacked{
