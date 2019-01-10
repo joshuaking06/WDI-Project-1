@@ -12,6 +12,8 @@ $(() => {
   const $newGameBtn = $('.new-game-btn')
   const $endScreen = $('.end-screen')
   const $result = $('.result')
+  let logArray = []
+  const $logList = $('.log')
   let originalHit
   let recentHits = []
   let userShipsDestroyed = 0
@@ -48,20 +50,6 @@ $(() => {
       $shipSquares.eq(i).addClass('coordinates')
     }
   }
-
-
-
-  // const $textsFireGrid = $('.fire-grid div')
-  // for(var i =0; i<$textsFireGrid.length; i++){
-  //   $textsFireGrid[i].text('hello')
-  // }
-
-
-  // $shipSquares.forEach(square, index => {
-  //   square.text(`${coordinates[index]}`)
-  // })
-
-
 
   //                                                   CPU SHIP PLACEMENT
   // --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -157,7 +145,7 @@ $(() => {
           break
         case 40: if(ship[ship.length-1]+ width < width*width) moveShip(ship, i, 'down')
           break
-        case 16: if((!isVertical(ship)) && (ship[ship.length-1]+ width < width*width)) rotateShipVertical(ship, i)
+        case 16: if((!isVertical(ship)) && (ship[0]+ width*ship.length < width*width)) rotateShipVertical(ship, i)
           if((isVertical(ship)) && (ship[0] % width < width-[ship.length-1]) )rotateShipHorizontal(ship, i)
           break
         case 13: if((i < 4) && (!(selectedSpaces.some(index => ship.includes(index))))){
@@ -337,7 +325,6 @@ $(() => {
   // cpu attack function
   function cpuFire(){
     const cpuTarget = smartAttack() || (Math.floor(Math.random() * 99) + 0)
-    console.log(cpuTarget, 'what the cpu attacked')
     if($shipSquares.eq(cpuTarget).hasClass('hit') ||
       $shipSquares.eq(cpuTarget).hasClass('attacked')){
       return cpuFire()
@@ -357,7 +344,6 @@ $(() => {
       if(recentHits.length === 1){
         originalHit = cpuTarget
       }
-      console.log('recent hits array just made', recentHits)
       checkForSunk(ships, userSquaresHit, $recentAction, true)
       userSquaresHit.length === 17 ? endGame('lose.') : setTimeout(() => userTurn(), 700)
     }
@@ -382,6 +368,7 @@ $(() => {
     cpuSquaresAttacked = []
     userSquaresHit = []
     userSquaresAttacked = []
+    logArray = []
     originalHit = undefined
     recentHits = []
     e.target.blur()
@@ -395,6 +382,8 @@ $(() => {
       (obj.sunk === false)){
         player.text(`${obj.name} was sunk`)
         if(!boolean){
+          logArray.unshift(`${obj.name} was sunk`)
+          updateLog()
           obj.index.forEach(index => {
             $fireSquares.eq(index).removeClass()
             $fireSquares.eq(index).addClass('dead')
@@ -404,6 +393,8 @@ $(() => {
         obj.sunk = true
         // changeDisplay(obj)
         if(boolean){
+          logArray.unshift(`Your ${obj.name} was sunk`)
+          updateLog()
           recentHits.forEach(index => {
             player.text(`Your ${obj.name} was sunk`)
             $shipSquares.eq(index).removeClass()
@@ -417,7 +408,17 @@ $(() => {
     })
   }
 
+  // logic for updating the battle log in middle of page
+  function updateLog(){
+    if(logArray.length === 12)logArray.pop()
+    if(logArray.length>1)$logList.prepend(`<li>${logArray[1]}</li>`)
+    $('.log li').eq(12).fadeOut(600, function(){
+      $('.log li').eq(12).remove()
+    })
+  }
 
+
+  // when game ends, give stats and option to restart
   function endGame(result){
     $gameBoard.hide()
     $boardDisplay.hide()
@@ -432,8 +433,12 @@ $(() => {
     const space = coordinates[index]
     if(attacker === 'cpu'){
       $recentAction.text(`The Enemy ${result} on ${space}!`)
+      logArray.unshift(`The Enemy ${result} on ${space}!`)
+      updateLog()
     } else {
       $recentAction.text(`You ${result} on ${space}!`)
+      logArray.unshift(`You ${result} on ${space}!`)
+      updateLog()
     }
   }
 
