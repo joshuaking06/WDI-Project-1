@@ -268,7 +268,7 @@ $(() => {
       cpuSquaresHit.push(fireIndex)
       cpuSquaresAttacked.push(fireIndex)
       checkForSunk(cpuShips, cpuSquaresHit, $recentAction)
-      cpuSquaresHit.length === 6 ? endGame('won!') : setTimeout(() => cpuTurn(), 700)
+      cpuSquaresHit.length === 17 ? endGame('won!') : setTimeout(() => cpuTurn(), 700)
     }
 
   }
@@ -370,7 +370,7 @@ $(() => {
         originalHit = cpuTarget
       }
       checkForSunk(ships, userSquaresHit, $recentAction, true)
-      userSquaresHit.length === 6 ? endGame('lose.') : setTimeout(() => userTurn(), 700)
+      userSquaresHit.length === 17 ? endGame('lose.') : setTimeout(() => userTurn(), 700)
     }
   }
 
