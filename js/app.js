@@ -1,6 +1,7 @@
 'use strict'
 
 $(() => {
+  const $body = $('body')
   const $shipGrid = $('.ship-grid')
   const $fireGrid = $('.fire-grid')
   const $recentAction = $('#recent-action')
@@ -252,7 +253,7 @@ $(() => {
       cpuSquaresHit.push(fireIndex)
       cpuSquaresAttacked.push(fireIndex)
       checkForSunk(cpuShips, cpuSquaresHit, $recentAction)
-      cpuSquaresHit.length === 5 ? endGame('won!') : setTimeout(() => cpuTurn(), 700)
+      cpuSquaresHit.length === 6 ? endGame('won!') : setTimeout(() => cpuTurn(), 700)
     }
 
   }
@@ -298,6 +299,7 @@ $(() => {
     if(recentHits.length > 1 &&  ((recentHits[0] -recentHits[1] === 10) || (recentHits)[1]-recentHits[0] ===10)){
       for(var i = 0; i<vertOptions.length; i++){
         possibleOption = originalHit + vertOptions[i]
+        console.log(possibleOption)
         if((!(userSquaresAttacked.includes(possibleOption))) &&
           possibleOption>=0 && possibleOption<100) return possibleOption
       }
@@ -306,6 +308,7 @@ $(() => {
     if(recentHits.length > 1 &&  ((recentHits[0] -recentHits[1] === 1) || (recentHits)[1]-recentHits[0] ===1)){
       for(var j = 0; j<sideOptions.length; j++){
         possibleOption = originalHit + sideOptions[j]
+        console.log(possibleOption)
         if((!(userSquaresAttacked.includes(possibleOption))) &&
         possibleOption>=0 && possibleOption<100) return possibleOption
       }
@@ -345,7 +348,7 @@ $(() => {
         originalHit = cpuTarget
       }
       checkForSunk(ships, userSquaresHit, $recentAction, true)
-      userSquaresHit.length === 5 ? endGame('lose.') : setTimeout(() => userTurn(), 700)
+      userSquaresHit.length === 6 ? endGame('lose.') : setTimeout(() => userTurn(), 700)
     }
   }
 
@@ -426,6 +429,9 @@ $(() => {
 
   // when game ends, give stats and option to restart
   function endGame(result){
+    $body.removeClass()
+    if(result === 'lose.')$body.addClass('failure')
+    if(result === 'won!')$body.addClass('victorious')
     $gameBoard.hide()
     $boardDisplay.hide()
     $endScreen.show()
@@ -458,6 +464,8 @@ $(() => {
   }
   //start the game
   function play(){
+    $body.removeClass()
+    $body.addClass('normalbg')
     stopScroll()
     $endScreen.hide()
     $resetBtn.show()

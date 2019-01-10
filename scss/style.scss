@@ -1,13 +1,32 @@
 *{
   box-sizing: border-box;
 }
+.normalbg{
+  background-image: url('../assets/playing.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.failure{
+  background-image:url('../assets/failure.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.victorious{
+  background-image: url('../assets/victorious2.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.start{
+  background-color: #800000;
+}
 
 body{
   font-family: 'Shadows Into Light', cursive;
   width: 95%;
   margin: 2% auto;
   background-size: cover;
-  background-color: #800000;
   .start-screen{
     width: 100%;
     margin-top: 50px;
@@ -34,7 +53,8 @@ body{
     text-align: center;
     margin-bottom: 3%;
     h1{
-      color:white;
+      color:black;
+      font-weight: 800;
       font-family: 'Cinzel', serif;
       text-align: center;
       display: inline;
@@ -49,18 +69,63 @@ body{
       margin-top: -30px;
       margin-bottom: 20px;
       font-size: 20px;
-      font-family: 'Permanent Marker', cursive;
+      font-family: 'Cinzel', serif;
       border-radius: 10px;
+    }
+    button:hover{
+      background-color: black;
+      font-size: 30px;
+      color: white;
+      width: 310px;
+      height: 55px;
+    }
+  }
+  .end-screen{
+    margin: 10% auto;
+    background: black;
+    border-radius: 20px;
+    padding: 10px;
+    color: white;
+    opacity: .95;
+    width: 40%;
+    height: 300px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    font-family: 'Cinzel', serif;
+    p{
+      font-size: 20px;
+      text-align: center;
+    }
+    button{
+    background-color: white;
+    font-size: 25px;
+    border-radius: 20px;
+    width: 50%;
+    color: black;
+    opacity: 0.8;
+    font-family: 'Cinzel', serif;
+    }
+    button:hover{
+      opacity: 0.8;
+      background-color: black;
+      border: 2px solid white;
+      color: white;
     }
   }
   .game-board{
     display: flex;
     justify-content: space-evenly;
-    background-color: #800000;
     flex-wrap: wrap;
     ul{
+      background-color: black;
+      opacity: .8;
       list-style-type: none;
+      padding: 10px;
       color: white;
+      height: 460px;
+      width: 300px;
+      border-radius: 20px;
       li{
         font-family: 'Cinzel', serif;
         font-size: 20px;
@@ -68,35 +133,42 @@ body{
       }
     }
     .ship-tracker{
-      h4{
-        margin-bottom: none;
-        font-family: 'Cinzel', serif;
-      }
-      width: 100%;
+      background-color: black;
+      opacity: 0.8;
+      width: 90%;
       display: flex;
       justify-content: center;
       color:white;
       font-size: 16px;
+      border-radius: 100px;
       div{
         text-align: center;
+        h4{
+          margin-bottom: 0;
+          font-family: 'Cinzel', serif;
+          font-size: 25px;
+        }
       }
       div div{
         display: flex;
         justify-content: space-around;
         p{
           padding: 10px;
+          padding-right: 40px;
+          padding-left: 40px;
           border-right: 1px solid white;
         }
         :last-child{
           border: none;
-          padding: 10px
+          padding: 10px;
+          padding-left: 40px;
         }
       }
     }
     .grid{
       background-color: lightblue;
       border-radius: 10px;
-      opacity: 0.8;
+      opacity: 0.9;
       height: 450px;
       width: 450px;
       display: flex;
@@ -104,14 +176,10 @@ body{
       div{
         border: 1px solid lightblue;
         background-color: black;
-        opacity: 0.8;
+        opacity: 0.9;
         border-radius: 15px;
         height: 10%;
         width: 10%;
-        opacity: 1;
-      }
-      .userShip{
-        background-color: black;
         opacity: 1;
       }
       .hit{
