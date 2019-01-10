@@ -1,6 +1,11 @@
 'use strict'
 
 $(() => {
+  const $hitAudio = $('#hit')
+  const $missAudio = $('#miss')
+  const $aimAudio = $('#aim')
+  const $moveAudio = $('#moveship')
+
   const $body = $('body')
   const $shipGrid = $('.ship-grid')
   const $fireGrid = $('.fire-grid')
@@ -197,6 +202,8 @@ $(() => {
       horzShip.push(startingIndex + i)
     }
     updateShipArray(horzShip, ship, i)
+    pauseAudio()
+    $moveAudio.get(0).play()
     return ship.sort((a,b) => b-a)
   }
 
@@ -210,6 +217,8 @@ $(() => {
       m+= 10
     }
     updateShipArray(verticalShip, ship, i)
+    pauseAudio()
+    $moveAudio.get(0).play()
     return ship.sort((a,b) => b-a)
   }
   //                                    SHIP MOVEMENT
@@ -219,6 +228,8 @@ $(() => {
     const nextIndex = getNextIndex(ship, direction).sort((a,b) => b-a)
     updateShipArray(nextIndex, ship, i)
     selectedSpaces.forEach(selectedSpace => $shipSquares.eq(selectedSpace).addClass('ship'))
+    pauseAudio()
+    $moveAudio.get(0).play()
     return ship
   }
 
@@ -244,11 +255,15 @@ $(() => {
       updateText('missed', fireIndex, 'You')
       $fireSquares.eq(fireIndex).addClass('attacked')
       cpuSquaresAttacked.push(fireIndex)
+      // pauseAudio()
+      $missAudio.get(0).play()
       setTimeout(() => cpuTurn(), 700)
     } else{
       $(document).off()
       $fireSquares.eq(fireIndex).removeClass()
       $fireSquares.eq(fireIndex).addClass('hit')
+      // pauseAudio()
+      $hitAudio.get(0).play()
       updateText('hit', fireIndex, 'You')
       cpuSquaresHit.push(fireIndex)
       cpuSquaresAttacked.push(fireIndex)
@@ -258,6 +273,12 @@ $(() => {
 
   }
 
+  function pauseAudio(){
+    $aimAudio.trigger('pause')
+    $hitAudio.trigger('pause')
+    $missAudio.trigger('pause')
+    $moveAudio.trigger('pause')
+  }
 
   // aiming for enemy ship
   function aim(){
@@ -271,8 +292,9 @@ $(() => {
       $fireSquares.off()
       fire()
     })
-    $(document).on('keydown click', e => {
+    $(document).on('keydown', e => {
       $fireSquares.eq(fireIndex).removeClass('firing')
+      $aimAudio.get(0).play()
       switch(e.keyCode) {
         case 37: if(fireIndex % width > 0)fireIndex--
           break
