@@ -5,7 +5,6 @@ $(() => {
   const $missAudio = $('#miss')
   const $aimAudio = $('#aim')
   const $moveAudio = $('#moveship')
-
   const $body = $('body')
   const $shipGrid = $('.ship-grid')
   const $fireGrid = $('.fire-grid')
