@@ -155,7 +155,7 @@ $(() => {
           placeUserShips(i)
         } else if((i === 4) && (!(selectedSpaces.some(index => ship.includes(index))))){
           ship.forEach(ship => $shipSquares.eq(ship).removeClass('pulse'))
-          $recentAction.text('Find Your Opponent\'s Ships! Press Enter to Fire')
+          $recentAction.text('Find Your Opponent\'s Ships! Press Enter or Click to Fire')
           addCoordinates()
           styleShips()
           userTurn()
@@ -252,7 +252,7 @@ $(() => {
       cpuSquaresHit.push(fireIndex)
       cpuSquaresAttacked.push(fireIndex)
       checkForSunk(cpuShips, cpuSquaresHit, $recentAction)
-      cpuSquaresHit.length === 17 ? endGame('won!') : setTimeout(() => cpuTurn(), 700)
+      cpuSquaresHit.length === 5 ? endGame('won!') : setTimeout(() => cpuTurn(), 700)
     }
 
   }
@@ -345,7 +345,7 @@ $(() => {
         originalHit = cpuTarget
       }
       checkForSunk(ships, userSquaresHit, $recentAction, true)
-      userSquaresHit.length === 17 ? endGame('lose.') : setTimeout(() => userTurn(), 700)
+      userSquaresHit.length === 5 ? endGame('lose.') : setTimeout(() => userTurn(), 700)
     }
   }
 
@@ -353,7 +353,7 @@ $(() => {
 
   // to reset the game to start
   function resetGame(e){
-    // resetIndices()
+    updateLog('reset')
     cpuShipsDestroyed = 0
     userShipsDestroyed = 0
     $shipSquares.removeClass()
@@ -409,7 +409,13 @@ $(() => {
   }
 
   // logic for updating the battle log in middle of page
-  function updateLog(){
+  function updateLog(reset){
+    if(reset){
+      $('.log').empty()
+      $('.log li').eq(0).text('')
+      logArray = []
+      $recentAction.text('Place your ships!')
+    }
     if(logArray.length === 12)logArray.pop()
     if(logArray.length>1)$logList.prepend(`<li>${logArray[1]}</li>`)
     $('.log li').eq(12).fadeOut(600, function(){

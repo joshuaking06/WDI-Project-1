@@ -84,11 +84,12 @@ body{
         display: flex;
         justify-content: space-around;
         p{
-          padding: 5px;
+          padding: 10px;
           border-right: 1px solid white;
         }
         :last-child{
           border: none;
+          padding: 10px
         }
       }
     }
