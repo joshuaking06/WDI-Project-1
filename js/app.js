@@ -320,7 +320,6 @@ $(() => {
     if(recentHits.length > 1 &&  ((recentHits[0] -recentHits[1] === 10) || (recentHits)[1]-recentHits[0] ===10)){
       for(var i = 0; i<vertOptions.length; i++){
         possibleOption = originalHit + vertOptions[i]
-        console.log(possibleOption)
         if((!(userSquaresAttacked.includes(possibleOption))) &&
           possibleOption>=0 && possibleOption<100) return possibleOption
       }
@@ -329,7 +328,6 @@ $(() => {
     if(recentHits.length > 1 &&  ((recentHits[0] -recentHits[1] === 1) || (recentHits)[1]-recentHits[0] ===1)){
       for(var j = 0; j<sideOptions.length; j++){
         possibleOption = originalHit + sideOptions[j]
-        console.log(possibleOption)
         if((!(userSquaresAttacked.includes(possibleOption))) &&
         possibleOption>=0 && possibleOption<100) return possibleOption
       }
@@ -400,12 +398,12 @@ $(() => {
   }
 
   // check if ship is sunk- if so update the ship object and display to player
-  function checkForSunk(array, squaresHit, player, boolean){
+  function checkForSunk(array, squaresHit, player, cpu){
     array.forEach(obj => {
       if((obj.index.every(index => squaresHit.includes(index))) &&
       (obj.sunk === false)){
         player.text(`${obj.name} was sunk`)
-        if(!boolean){
+        if(!cpu){
           logArray.unshift(`${obj.name} was sunk`)
           updateLog()
           obj.index.forEach(index => {
@@ -416,7 +414,7 @@ $(() => {
         }
         obj.sunk = true
         // changeDisplay(obj)
-        if(boolean){
+        if(cpu){
           logArray.unshift(`Your ${obj.name} was sunk`)
           updateLog()
           recentHits.forEach(index => {
