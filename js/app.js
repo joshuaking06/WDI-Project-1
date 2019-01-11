@@ -103,7 +103,9 @@ $(() => {
       shipArray.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass(`ship ${ships[i].name}`))
       shipArray.forEach(shipIndex => $shipSquares.eq(shipIndex).addClass('pulse'))
       addCoordinates()
+      return baseArray
     })
+    return baseArray
   }
 
   // place the cpu ships on "board"
@@ -129,12 +131,14 @@ $(() => {
   function placeUserShips(i){
     $(document).off()
     // choosing ship to begin placing
-    const ship = ships[i].index
+    let ship = ships[i].index
     addCoordinates()
     ship.forEach(ship => $shipSquares.eq(ship).addClass(`ship ${ships[i].name}`))
     ship.forEach(ship => $shipSquares.eq(ship).addClass('pulse'))
     // figure out which way user wants to move ship, and if it's possible
     $(document).on('keydown', e =>{
+      ship = ship.sort((a,b) => a-b)
+      console.log(ship)
       switch(e.keyCode){
         case 37: if(ship[ship.length-1] % width > ship.length-1 ||
                   (isVertical(ship) && (ship[0] % width > 0))){
@@ -219,6 +223,7 @@ $(() => {
     pauseAudio()
     $moveAudio.get(0).play()
     return ship.sort((a,b) => b-a)
+
   }
   //                                    SHIP MOVEMENT
   //-------------------------------------------------------------------------------------------------------------
@@ -254,14 +259,14 @@ $(() => {
       updateText('missed', fireIndex, 'You')
       $fireSquares.eq(fireIndex).addClass('attacked')
       cpuSquaresAttacked.push(fireIndex)
-      // pauseAudio()
+      pauseAudio()
       $missAudio.get(0).play()
       setTimeout(() => cpuTurn(), 700)
     } else{
       $(document).off()
       $fireSquares.eq(fireIndex).removeClass()
       $fireSquares.eq(fireIndex).addClass('hit')
-      // pauseAudio()
+      pauseAudio()
       $hitAudio.get(0).play()
       updateText('hit', fireIndex, 'You')
       cpuSquaresHit.push(fireIndex)
@@ -413,7 +418,6 @@ $(() => {
           cpuShipsDestroyed++
         }
         obj.sunk = true
-        // changeDisplay(obj)
         if(cpu){
           logArray.unshift(`Your ${obj.name} was sunk`)
           updateLog()
